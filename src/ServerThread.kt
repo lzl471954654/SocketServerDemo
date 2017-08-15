@@ -1,205 +1,93 @@
+import JavaBean.Account
 import java.io.*
 import java.net.Socket
 
 class ServerThread @Throws(IOException::class)
-constructor(internal var socket: Socket) : Thread() {
-    internal var reader: BufferedReader = BufferedReader(InputStreamReader(socket.getInputStream()))
-    internal var printWriter: PrintWriter = PrintWriter(OutputStreamWriter(socket.getOutputStream()))
-    internal var port = socket.port
-    internal var inetAddress = socket.inetAddress
-    internal var loop = true
-    val END = ServerProtocol.END_FLAG
-    var contorller = false
-    lateinit var id:String
+constructor(override var socket: Socket) : BaseServerThread(socket) {
 
 
     override fun run() {
         try {
             server()
-        }catch (e:Exception){
+        } catch (e: Exception) {
             e.printStackTrace()
-            LogUtils.logException(this.javaClass.name,""+e.message)
+            LogUtils.logException(this.javaClass.name, "" + e.message)
+            if (e is InterruptedException&&!loop){
+                sendErrorMsg(ServerProtocol.OFFLINE)
+            }
+        }finally {
+            releaseSocket()
         }
     }
 
-    private fun server(){
-        var line: String? = null
+
+    override fun server() {
         while (loop) {
-            try {
-                line = readStringData()
-                LogUtils.logInfo(javaClass.name,line)
-                val data = line
-                println(data)
-                println(data.split("_"))
-                when(data.split("_")[0])
-                {
-                    ServerProtocol.CONNECTED_TO_USER->{
-                        val params = data.split("_")
-                        if(params.size<3){
-                            sendParamsError("Params is not enough")
-                        }
-                        val userMode = params[1]
-                        val id = params[2]
-                        println("id:$id")
-                        when(userMode){
-                            ServerProtocol.CONTROL->{
-                                println("Control")
-                                println(ServerMain.beControlledSocketMap.containsKey(id))
-                                if(ServerMain.beControlledSocketMap.containsKey(id)) {
-                                    val userServer = ServerMain.beControlledSocketMap.get(id)
-                                    exchangeIpAddress(userServer!!)
-                                }
-                                else
-                                {
-                                    sendNormalMsg("No such user : $id")
-                                }
-                            }
-                            /*ServerProtocol.BE_CONTROLLED->{
-                                if(ServerMain.beControlledSocketMap.contains(id)){
-                                    val userServer = ServerMain.beControlledSocketMap.get(id)
-                                    exchangeIpAddress(userServer!!)
-                                }
-                                else{
-                                    sendNormalMsg("No such user : $id")
-                                }
-                            }*/
-                        }
-                    }
-                    ServerProtocol.HEATR_BEAT->{
-                        printWriter.println(ServerProtocol.HEATR_BEAT+END)
-                        printWriter.flush()
-                    }
-                    ServerProtocol.ONLINE->{
-                        println("online")
-                        val paramas = data.split("_")
-                        if(paramas.size<3)
-                        {
-                            val error = "Params is not enough"
-                            sendParamsError(error)
-                            return
-                        }
-                        val id:String = paramas[1]
-                        val mode = paramas[2]
-                        println("mode")
-                        when(mode){
-                            ServerProtocol.CONTROL->{
-                                if(ServerMain.controlSocketMap.containsKey(id))
-                                {
-                                    sendNormalMsg(ServerProtocol.ONLINE_FAILED)
-                                    releaseSocket()
-                                }
-                                else{
-                                    ServerMain.controlSocketMap.put(id,this)
-                                    sendNormalMsg(ServerProtocol.ONLINE_SUCCESS)
-                                    contorller = true
-                                    this.id = id
-                                }
-                            }
-                            ServerProtocol.BE_CONTROLLED->{
-                                println(id)
-                                if(ServerMain.beControlledSocketMap.containsKey(id)){
-                                    sendNormalMsg(ServerProtocol.ONLINE_FAILED)
-                                    releaseSocket()
-                                }
-                                else{
-                                    println("add")
-                                    ServerMain.beControlledSocketMap.put(id,this)
-                                    sendNormalMsg(ServerProtocol.ONLINE_SUCCESS)
-                                    contorller = false
-                                    this.id = id
-                                }
-                            }
-                            else->{
-                                println("else")
-                                sendParamsError("No such mode")
-                            }
-                        }
-                    }
-                    ServerProtocol.OFFLINE->{
-                        val paramas = data.split("_")
-                        if(paramas.size<2)
-                        {
-                            val error = "Params is not enough"
-                            sendParamsError(error)
-                            return
-                        }
-                        val id:String = paramas[1]
-                        val mode:String = paramas[2]
-                        when(mode){
-                            ServerProtocol.CONTROL->{
-                                if(ServerMain.controlSocketMap.containsKey(id))
-                                {
-                                    sendNormalMsg("OFFLINE SUCCESS")
-                                    ServerMain.controlSocketMap.remove(id)
-                                    releaseSocket()
-                                }
-                            }
-                            ServerProtocol.BE_CONTROLLED->{
-                                if(ServerMain.beControlledSocketMap.containsKey(id)){
-                                    sendNormalMsg("OFFLINE SUCCESS")
-                                    ServerMain.beControlledSocketMap.remove(id)
-                                    releaseSocket()
-                                }
-                            }
-                            else->{
-                                sendParamsError("No such mode")
-                            }
-                        }
+            val request = readStringData()
+            val params = request.split("_")
+            when (params[0]) {
+                ServerProtocol.CONNECTED_TO_USER -> {
+                    account.account = params[1]
+                    account.password = params[2]
+                    if (checkContolledOnline()) {
+                        printWriter.println(createParams(ServerProtocol.CONNECTED_TO_USER, ServerProtocol.CONNECTED_SUCCESS))
+                    } else {
+                        printWriter.println(createParams(ServerProtocol.CONNECTED_TO_USER,ServerProtocol.CONNECTED_FAILED))
+                        return
                     }
                 }
-            } catch (e: IOException) {
-                e.printStackTrace()
-                LogUtils.logException(this.javaClass.name,""+e.message)
-                releaseSocket()
+                ServerProtocol.FILE_LIST_FLAG -> {
+                    if (isBind()) {
+                        fileTransmission(params[0])
+                    } else {
+                        sendErrorMsg(ServerProtocol.UNBIND_ERROR)
+                    }
+                }
+                ServerProtocol.COMMAND -> {
+                    if (isBind()) {
+                        bindThread!!.printWriter.println(createParams(ServerProtocol.COMMAND, params[1]))
+                    } else {
+                        sendErrorMsg(ServerProtocol.UNBIND_ERROR)
+                    }
+                }
             }
-            finally {
-
-            }
-
         }
     }
 
-    fun exchangeIpAddress(server:ServerThread){
+
+    fun exchangeIpAddress(server: ServerThread) {
         println("exchange")
         val userPort = server.port
         val userPrinter = server.printWriter
         val userAddress = server.inetAddress
 
-        this.printWriter.println(ServerProtocol.MAKE_HOLE+"_${userAddress.hostAddress}_${userPort}_"+END)
+        this.printWriter.println(ServerProtocol.MAKE_HOLE + "_${userAddress.hostAddress}_${userPort}_" + END)
         this.printWriter.flush()
-        userPrinter.println(ServerProtocol.MAKE_HOLE+"_${this.inetAddress.hostAddress}_${this.port}_"+END)
+        userPrinter.println(ServerProtocol.MAKE_HOLE + "_${this.inetAddress.hostAddress}_${this.port}_" + END)
         userPrinter.flush()
     }
 
-    fun readStringData():String{
-        var line:String? = null
-        var builder:StringBuilder = StringBuilder()
-        while (true){
-            line = reader.readLine()
-            if(line!=null)
-                builder.append(line)
-            if(line!=null&&line.endsWith(END))
-                break
-            Thread.sleep(1000)
+    fun checkContolledOnline(): Boolean {
+        var flag = false
+        ServerMain.beControlledSocketMap.forEach {
+            if (it.key==account) {
+                flag = true
+                bindServerThread(it.value)
+                return@forEach
+            }
         }
-        return builder.toString()
+        return flag
     }
 
-    fun sendParamsError(msg:String){
-        printWriter.println(ServerProtocol.ERROR+"_$msg"+"_"+END)
-        printWriter.flush()
-        releaseSocket()
+    override fun removeAccount() {
+        ServerMain.controlSocketMap.remove(account)
     }
 
-    fun sendNormalMsg(msg:String){
-        printWriter.println(ServerProtocol.NORMAL_MSG+"_"+msg+"_"+END)
-        printWriter.flush()
+    override fun addAccount() {
+        ServerMain.controlSocketMap.put(account, this)
     }
 
-    fun releaseSocket()
-    {
-        printWriter.close()
-        socket.close()
-        loop = false
+    override fun containsAccount(): Boolean {
+        return ServerMain.controlSocketMap.contains(account)
     }
 }

@@ -1,11 +1,13 @@
+import JavaBean.Account;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ServerMain {
-    public static ConcurrentHashMap<String,ServerThread> controlSocketMap = new ConcurrentHashMap<>();
-    public static ConcurrentHashMap<String,ServerThread> beControlledSocketMap = new ConcurrentHashMap<>();
+    public static ConcurrentHashMap<Account,ServerThread> controlSocketMap = new ConcurrentHashMap<>();
+    public static ConcurrentHashMap<Account,ControlledServerThread> beControlledSocketMap = new ConcurrentHashMap<>();
 
     public void serverRun() {
         try {
