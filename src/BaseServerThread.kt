@@ -4,11 +4,11 @@ import com.google.gson.Gson
 import java.io.*
 import java.net.Socket
 
-abstract class BaseServerThread(open var socket: Socket):Thread() {
-    internal var reader: BufferedReader = BufferedReader(InputStreamReader(socket.getInputStream()))
-    internal var printWriter: PrintWriter = PrintWriter(OutputStreamWriter(socket.getOutputStream()))
-    internal var port = socket.port
-    internal var inetAddress = socket.inetAddress
+abstract class BaseServerThread:Thread {
+    abstract var socket: Socket
+    internal var reader: BufferedReader
+    internal var printWriter: PrintWriter
+
     internal var loop = true
     val classTag = javaClass.name
     val END = ServerProtocol.END_FLAG
@@ -16,12 +16,20 @@ abstract class BaseServerThread(open var socket: Socket):Thread() {
     var bindFlag = false
     var bindThread:BaseServerThread? = null
 
+    constructor(socket: Socket){
+        this.socket = socket
+        println("constructor socket is ${if (socket==null){"null"}else{"not NULL"}}")
+        reader = BufferedReader(InputStreamReader(socket.getInputStream()))
+        printWriter = PrintWriter(OutputStreamWriter(socket.getOutputStream()))
+    }
+
     fun releaseSocket()
     {
         printWriter.close()
         socket.close()
         loop = false
-        unBindServerThread()
+        if(isBind())
+            unBindServerThread()
         if(containsAccount())
             removeAccount()
     }
@@ -33,7 +41,7 @@ abstract class BaseServerThread(open var socket: Socket):Thread() {
     }
 
     fun sendNormalMsg(msg:String){
-        printWriter.println(createParams(ServerProtocol.NORMAL_MSG,msg))
+        printWriter.println(createParams(msg))
         printWriter.flush()
     }
 

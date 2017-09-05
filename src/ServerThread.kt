@@ -22,7 +22,8 @@ constructor(override var socket: Socket) : BaseServerThread(socket) {
 
 
     override fun server() {
-        while (loop) {
+        while (loop&&!isInterrupted) {
+            println("when")
             val request = readStringData()
             val params = request.split("_")
             when (params[0]) {
@@ -30,15 +31,17 @@ constructor(override var socket: Socket) : BaseServerThread(socket) {
                     account.account = params[1]
                     account.password = params[2]
                     if (checkContolledOnline()) {
-                        printWriter.println(createParams(ServerProtocol.CONNECTED_TO_USER, ServerProtocol.CONNECTED_SUCCESS))
+                        printWriter.println(createParams(ServerProtocol.CONNECTED_SUCCESS))
+                        printWriter.flush()
                     } else {
-                        printWriter.println(createParams(ServerProtocol.CONNECTED_TO_USER,ServerProtocol.CONNECTED_FAILED))
+                        printWriter.println(createParams(ServerProtocol.CONNECTED_FAILED))
+                        printWriter.flush()
                         return
                     }
                 }
                 ServerProtocol.FILE_LIST_FLAG -> {
                     if (isBind()) {
-                        fileTransmission(params[0])
+                        fileTransmission(params[1])
                     } else {
                         sendErrorMsg(ServerProtocol.UNBIND_ERROR)
                     }
@@ -46,6 +49,15 @@ constructor(override var socket: Socket) : BaseServerThread(socket) {
                 ServerProtocol.COMMAND -> {
                     if (isBind()) {
                         bindThread!!.printWriter.println(createParams(ServerProtocol.COMMAND, params[1]))
+                        bindThread!!.printWriter.flush()
+                    } else {
+                        sendErrorMsg(ServerProtocol.UNBIND_ERROR)
+                    }
+                }
+                else->{
+                    if (isBind()) {
+                        bindThread!!.printWriter.println(request)
+                        bindThread!!.printWriter.flush()
                     } else {
                         sendErrorMsg(ServerProtocol.UNBIND_ERROR)
                     }
@@ -55,17 +67,6 @@ constructor(override var socket: Socket) : BaseServerThread(socket) {
     }
 
 
-    fun exchangeIpAddress(server: ServerThread) {
-        println("exchange")
-        val userPort = server.port
-        val userPrinter = server.printWriter
-        val userAddress = server.inetAddress
-
-        this.printWriter.println(ServerProtocol.MAKE_HOLE + "_${userAddress.hostAddress}_${userPort}_" + END)
-        this.printWriter.flush()
-        userPrinter.println(ServerProtocol.MAKE_HOLE + "_${this.inetAddress.hostAddress}_${this.port}_" + END)
-        userPrinter.flush()
-    }
 
     fun checkContolledOnline(): Boolean {
         var flag = false

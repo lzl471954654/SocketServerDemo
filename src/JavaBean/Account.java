@@ -1,6 +1,8 @@
 package JavaBean;
 
-public class Account {
+import java.io.Serializable;
+
+public class Account implements Serializable{
     private String account;
     private String password;
 

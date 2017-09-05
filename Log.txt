@@ -1,8 +1,1 @@
-Sat Aug 12 22:12:31 CST 2017  Info: Main : LogInit!
-Sat Aug 12 22:13:18 CST 2017  Info: ServerMain : Get a Socket -> IP: /192.168.1.121 Port: 56847
-Sat Aug 12 22:13:18 CST 2017  Info: ServerThread : |ONLINE|_Test_|BE@CONTROLLED|_@@|END@FLAG|@@
-Sat Aug 12 22:13:30 CST 2017  Info: ServerMain : Get a Socket -> IP: /192.168.1.121 Port: 56861
-Sat Aug 12 22:13:30 CST 2017  Info: ServerThread : |ONLINE|_lzl471954654_|CONTROL|_@@|END@FLAG|@@
-Sat Aug 12 22:13:30 CST 2017  Info: ServerThread : |CONNECTED@TO@USER|_|CONTROL|_Test_@@|END@FLAG|@@
-Sat Aug 12 22:13:30 CST 2017  Info: ServerThread : |OFFLINE|_lzl471954654_|CONTROL|_@@|END@FLAG|@@
-Sat Aug 12 22:13:55 CST 2017  Exception: ServerThread : Connection reset
+Wed Sep 06 00:33:02 CST 2017  Info: Main : LogInit!

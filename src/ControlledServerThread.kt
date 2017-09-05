@@ -10,7 +10,7 @@ class ControlledServerThread(override var socket: Socket) : BaseServerThread(soc
 
 
     override fun server() {
-        while (loop) {
+        while (loop&&!isInterrupted) {
             val request = readStringData()
             val params = request.split("_")
             when (params[0]) {
@@ -21,7 +21,10 @@ class ControlledServerThread(override var socket: Socket) : BaseServerThread(soc
                         sendErrorMsg(ServerProtocol.ONLINE_FAILED)
                         return
                     } else
+                    {
+                        addAccount()
                         sendNormalMsg(ServerProtocol.ONLINE_SUCCESS)
+                    }
                 }
                 ServerProtocol.OFFLINE -> {
                     return
@@ -36,6 +39,16 @@ class ControlledServerThread(override var socket: Socket) : BaseServerThread(soc
                 ServerProtocol.COMMAND_RESULT->{
                     if(isBind()){
                         bindThread!!.printWriter.println(createParams(ServerProtocol.COMMAND_RESULT,params[1]))
+                        bindThread!!.printWriter.flush()
+                    }
+                    else{
+                        sendErrorMsg(ServerProtocol.UNBIND_ERROR)
+                    }
+                }
+                else->{
+                    if(isBind()){
+                        bindThread!!.printWriter.println(request)
+                        bindThread!!.printWriter.flush()
                     }
                     else{
                         sendErrorMsg(ServerProtocol.UNBIND_ERROR)
@@ -59,6 +72,7 @@ class ControlledServerThread(override var socket: Socket) : BaseServerThread(soc
             releaseSocket()
         }
     }
+
 
 
     override fun removeAccount() {

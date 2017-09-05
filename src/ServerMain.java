@@ -1,9 +1,10 @@
 import JavaBean.Account;
 import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
 
-import java.io.IOException;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Scanner;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ServerMain {
@@ -52,6 +53,7 @@ public class ServerMain {
                 try{
                     while(true){
                         Socket socket = serverSocket.accept();
+                        System.out.println("controlledThread socket is"+socket==null);
                         ControlledServerThread thread = new ControlledServerThread(socket);
                         LogUtils.logInfo(getClass().getName(),"Get a ControlledSocket -> IP: "+socket.getInetAddress()+" Port: "+socket.getPort());
                         thread.start();
@@ -70,6 +72,7 @@ public class ServerMain {
                     ServerSocket serverSocket = new ServerSocket(10086);
                     while(true){
                         Socket socket = serverSocket.accept();
+                        System.out.println("ServerThread socket is"+socket==null);
                         ServerThread thread = new ServerThread(socket);
                         LogUtils.logInfo(getClass().getName(),"Get a ControlledSocket -> IP: "+socket.getInetAddress()+" Port: "+socket.getPort());
                         thread.start();
