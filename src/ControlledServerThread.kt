@@ -36,6 +36,14 @@ class ControlledServerThread(override var socket: Socket) : BaseServerThread(soc
                         sendErrorMsg(ServerProtocol.UNBIND_ERROR)
                     }
                 }
+                ServerProtocol.PIC_SEND->{
+                    if(isBind()){
+                        sendPic(params[1])
+                    }
+                    else{
+                        sendErrorMsg(ServerProtocol.UNBIND_ERROR)
+                    }
+                }
                 ServerProtocol.COMMAND_RESULT->{
                     if(isBind()){
                         bindThread!!.printWriter.println(createParams(ServerProtocol.COMMAND_RESULT,params[1]))
@@ -54,6 +62,23 @@ class ControlledServerThread(override var socket: Socket) : BaseServerThread(soc
                         sendErrorMsg(ServerProtocol.UNBIND_ERROR)
                     }
                 }
+            }
+        }
+    }
+
+    fun sendPic(jsonSrc:String){
+        val gson = Gson()
+        val fileDesc = gson.fromJson(jsonSrc,FileDescribe::class.java)
+        bindThread!!.printWriter.println(createParams(ServerProtocol.PIC_SEND,jsonSrc))
+        val response = bindThread!!.readStringData()
+        val params = response.split("_")
+        when(params[0]){
+            ServerProtocol.FILE_READY->{
+                this.printWriter.println(createParams(ServerProtocol.FILE_READY))
+                readAndSendByteData(this,bindThread!!,fileDesc.fileSize)
+            }
+            else->{
+                this.printWriter.println(createParams(ServerProtocol.ERROR,params[0]))
             }
         }
     }

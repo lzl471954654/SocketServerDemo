@@ -55,4 +55,10 @@ public interface ServerProtocol {
     * */
     public static final String FILE_LIST_FLAG = "|FILE@LIST@FLAG|";     //发送文件列表标志
     public static final String FILE_READY = "|FILE@READY|"; //已经准备好接收文件
+
+
+    /*
+    * 发送截图
+    * */
+    String PIC_SEND = "|PIC@SEND|";
 }
