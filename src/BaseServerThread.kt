@@ -1,4 +1,5 @@
 import JavaBean.Account
+import JavaBean.FileCommand
 import JavaBean.FileDescribe
 import com.google.gson.Gson
 import java.io.*
@@ -54,21 +55,47 @@ abstract class BaseServerThread:Thread {
         return builder.toString()
     }
 
+    fun dispatchMessage(request:String){
+        if (isBind()) {
+            bindThread!!.printWriter.println(request)
+            bindThread!!.printWriter.flush()
+        } else {
+            sendErrorMsg(ServerProtocol.UNBIND_ERROR)
+        }
+    }
+
+    fun NewFileTransmission(jsonSrc: String){
+        val gson = Gson()
+        val fileArray = gson.fromJson<FileCommand>(jsonSrc, FileCommand::class.java)
+
+
+        bindThread!!.printWriter.println(createParams(ServerProtocol.FILE_READY, jsonSrc))
+        bindThread!!.printWriter.flush()
+
+        fileArray.describe.forEach {
+            readAndSendByteData(this,bindThread!!,it.fileSize)
+        }
+    }
+
     fun fileTransmission(jsonSrc: String) {
         val gson = Gson()
-        val fileArray = gson.fromJson<Array<FileDescribe>>(jsonSrc, Array<FileDescribe>::class.java)
+        val fileArray = gson.fromJson<FileCommand>(jsonSrc, FileCommand::class.java)
+
         bindThread!!.printWriter.println(createParams(ServerProtocol.FILE_LIST_FLAG, jsonSrc))
+        bindThread!!.printWriter.flush()
         val response = bindThread!!.readStringData()
         val params = response.split("_")
         when (params[0]) {
             ServerProtocol.FILE_READY->{
                 this.printWriter.println(createParams(ServerProtocol.FILE_READY))
-                fileArray.forEach {
+                this.printWriter.flush()
+                fileArray.describe.forEach {
                     readAndSendByteData(this,bindThread!!,it.fileSize)
                 }
             }
             else->{
                 this.printWriter.println(createParams(ServerProtocol.ERROR,params[0]))
+                this.printWriter.flush()
             }
         }
     }
@@ -81,9 +108,11 @@ abstract class BaseServerThread:Thread {
         var count = 0
         while (true){
             count = bufferedInput.read(bytes)
+            println("count is " + count)
             if(count==-1)
                 break
             bufferedOutput.write(bytes,0,count)
+            bufferedOutput.flush()
             sizeCount+=count
             if(sizeCount==fileSize)
                 break

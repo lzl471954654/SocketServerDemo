@@ -29,13 +29,22 @@ class ControlledServerThread(override var socket: Socket) : BaseServerThread(soc
                 ServerProtocol.OFFLINE -> {
                     return
                 }
-                ServerProtocol.FILE_LIST_FLAG -> {
+                ServerProtocol.FILE_LIST_FLAG->{
+                    dispatchMessage(request)
+                }
+                ServerProtocol.FILE_READY->{
+                    NewFileTransmission(params[1])
+                }
+                ServerProtocol.FILE_NOT_READY->{
+                    dispatchMessage(request)
+                }
+                /*ServerProtocol.FILE_LIST_FLAG -> {
                     if (isBind())
                         fileTransmission(params[1])
                     else {
                         sendErrorMsg(ServerProtocol.UNBIND_ERROR)
                     }
-                }
+                }*/
                 ServerProtocol.PIC_SEND->{
                     if(isBind()){
                         sendPic(params[1])

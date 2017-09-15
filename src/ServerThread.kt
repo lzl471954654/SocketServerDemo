@@ -1,4 +1,5 @@
 import JavaBean.Account
+import com.sun.xml.internal.ws.resources.SenderMessages
 import java.io.*
 import java.net.Socket
 
@@ -39,13 +40,22 @@ constructor(override var socket: Socket) : BaseServerThread(socket) {
                         return
                     }
                 }
-                ServerProtocol.FILE_LIST_FLAG -> {
+                ServerProtocol.FILE_LIST_FLAG->{
+                    dispatchMessage(request)
+                }
+                ServerProtocol.FILE_READY->{
+                    NewFileTransmission(params[1])
+                }
+                ServerProtocol.FILE_NOT_READY->{
+                    dispatchMessage(request)
+                }
+                /*ServerProtocol.FILE_LIST_FLAG -> {
                     if (isBind()) {
                         fileTransmission(params[1])
                     } else {
                         sendErrorMsg(ServerProtocol.UNBIND_ERROR)
                     }
-                }
+                }*/
                 ServerProtocol.COMMAND -> {
                     if (isBind()) {
                         bindThread!!.printWriter.println(createParams(ServerProtocol.COMMAND, params[1]))
@@ -55,16 +65,13 @@ constructor(override var socket: Socket) : BaseServerThread(socket) {
                     }
                 }
                 else->{
-                    if (isBind()) {
-                        bindThread!!.printWriter.println(request)
-                        bindThread!!.printWriter.flush()
-                    } else {
-                        sendErrorMsg(ServerProtocol.UNBIND_ERROR)
-                    }
+                    dispatchMessage(request)
                 }
             }
         }
     }
+
+
 
 
 
