@@ -32,11 +32,9 @@ constructor(override var socket: Socket) : BaseServerThread(socket) {
                     account.account = params[1]
                     account.password = params[2]
                     if (checkContolledOnline()) {
-                        printWriter.println(createParams(ServerProtocol.CONNECTED_SUCCESS))
-                        printWriter.flush()
+                        sendMsg(createParams(ServerProtocol.CONNECTED_SUCCESS))
                     } else {
-                        printWriter.println(createParams(ServerProtocol.CONNECTED_FAILED))
-                        printWriter.flush()
+                        sendMsg(createParams(ServerProtocol.CONNECTED_FAILED))
                         return
                     }
                 }
@@ -58,8 +56,7 @@ constructor(override var socket: Socket) : BaseServerThread(socket) {
                 }*/
                 ServerProtocol.COMMAND -> {
                     if (isBind()) {
-                        bindThread!!.printWriter.println(createParams(ServerProtocol.COMMAND, params[1]))
-                        bindThread!!.printWriter.flush()
+                        bindThread!!.sendMsg(createParams(ServerProtocol.COMMAND, params[1]))
                     } else {
                         sendErrorMsg(ServerProtocol.UNBIND_ERROR)
                     }

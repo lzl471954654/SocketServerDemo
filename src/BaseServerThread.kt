@@ -4,11 +4,11 @@ import JavaBean.FileDescribe
 import com.google.gson.Gson
 import java.io.*
 import java.net.Socket
+import java.nio.charset.Charset
+import kotlin.experimental.and
 
 abstract class BaseServerThread:Thread {
     abstract var socket: Socket
-    internal var reader: BufferedReader
-    internal var printWriter: PrintWriter
 
     internal var loop = true
     val classTag = javaClass.name
@@ -20,13 +20,10 @@ abstract class BaseServerThread:Thread {
     constructor(socket: Socket){
         this.socket = socket
         println("constructor socket is ${if (socket==null){"null"}else{"not NULL"}}")
-        reader = BufferedReader(InputStreamReader(socket.getInputStream()))
-        printWriter = PrintWriter(OutputStreamWriter(socket.getOutputStream()))
     }
 
     fun releaseSocket()
     {
-        printWriter.close()
         socket.close()
         loop = false
         if(isBind())
@@ -36,14 +33,22 @@ abstract class BaseServerThread:Thread {
     }
 
     fun sendErrorMsg(msg:String){
-        printWriter.println(createParams(ServerProtocol.ERROR,msg))
-        printWriter.flush()
+        val bytes = createParams(ServerProtocol.ERROR,msg).toByteArray(Charset.forName("UTF-8"))
+        socket.getOutputStream().write(IntConvertUtils.getIntegerBytes(bytes.size))
+        socket.getOutputStream().write(bytes)
         releaseSocket()
     }
 
     fun sendNormalMsg(msg:String){
-        printWriter.println(createParams(msg))
-        printWriter.flush()
+        val bytes = createParams(msg).toByteArray(Charset.forName("UTF-8"))
+        socket.getOutputStream().write(IntConvertUtils.getIntegerBytes(bytes.size))
+        socket.getOutputStream().write(bytes)
+    }
+
+    fun sendMsg(msg: String){
+        val bytes = msg.toByteArray(Charset.forName("UTF-8"))
+        socket.getOutputStream().write(IntConvertUtils.getIntegerBytes(bytes.size))
+        socket.getOutputStream().write(bytes)
     }
 
     fun createParams(vararg args:String):String{
@@ -57,8 +62,7 @@ abstract class BaseServerThread:Thread {
 
     fun dispatchMessage(request:String){
         if (isBind()) {
-            bindThread!!.printWriter.println(request)
-            bindThread!!.printWriter.flush()
+            bindThread!!.sendMsg(request)
         } else {
             sendErrorMsg(ServerProtocol.UNBIND_ERROR)
         }
@@ -67,48 +71,45 @@ abstract class BaseServerThread:Thread {
     fun NewFileTransmission(jsonSrc: String){
         val gson = Gson()
         val fileArray = gson.fromJson<FileCommand>(jsonSrc, FileCommand::class.java)
+        println("fileTrans :"+this.javaClass.name)
 
-
-        bindThread!!.printWriter.println(createParams(ServerProtocol.FILE_READY, jsonSrc))
-        bindThread!!.printWriter.flush()
+        bindThread!!.sendMsg(createParams(ServerProtocol.FILE_READY,jsonSrc))
 
         fileArray.describe.forEach {
-            readAndSendByteData(this,bindThread!!,it.fileSize)
+            readAndSendByteData(bindThread!!,this,it.fileSize)
         }
     }
 
     fun fileTransmission(jsonSrc: String) {
         val gson = Gson()
         val fileArray = gson.fromJson<FileCommand>(jsonSrc, FileCommand::class.java)
-
-        bindThread!!.printWriter.println(createParams(ServerProtocol.FILE_LIST_FLAG, jsonSrc))
-        bindThread!!.printWriter.flush()
+        bindThread!!.sendMsg(createParams(ServerProtocol.FILE_LIST_FLAG, jsonSrc))
         val response = bindThread!!.readStringData()
         val params = response.split("_")
         when (params[0]) {
             ServerProtocol.FILE_READY->{
-                this.printWriter.println(createParams(ServerProtocol.FILE_READY))
-                this.printWriter.flush()
+                this.sendMsg(createParams(ServerProtocol.FILE_READY))
                 fileArray.describe.forEach {
                     readAndSendByteData(this,bindThread!!,it.fileSize)
                 }
             }
             else->{
-                this.printWriter.println(createParams(ServerProtocol.ERROR,params[0]))
-                this.printWriter.flush()
+                this.sendMsg(createParams(ServerProtocol.ERROR,params[0]))
             }
         }
     }
 
     fun readAndSendByteData(srcServerThread: BaseServerThread,targetServerTHread:BaseServerThread,fileSize:Long){
-        var bufferedInput = BufferedInputStream(srcServerThread.socket.getInputStream())
-        var bufferedOutput = BufferedOutputStream(targetServerTHread.socket.getOutputStream())
+        var bufferedInput = srcServerThread.socket.getInputStream()
+        var bufferedOutput = targetServerTHread.socket.getOutputStream()
         var bytes = ByteArray(4096)
         var sizeCount = 0L
         var count = 0
+        println("class :${this.javaClass.name} pid = ${Thread.currentThread().id}\tfileSize is :$fileSize")
         while (true){
             count = bufferedInput.read(bytes)
-            println("count is " + count)
+            println("class :${this.javaClass.name} pid = ${Thread.currentThread().id}\tcount is " + count)
+            println("class :${this.javaClass.name} pid = ${Thread.currentThread().id}\tdata : ${String(bytes)}")
             if(count==-1)
                 break
             bufferedOutput.write(bytes,0,count)
@@ -120,18 +121,28 @@ abstract class BaseServerThread:Thread {
     }
 
     fun readStringData():String{
-        var line:String? = null
-        var builder:StringBuilder = StringBuilder()
-        while (true){
-            line = reader.readLine()
-            if(line!=null)
-                builder.append(line)
-            if(line!=null&&line.endsWith(END))
-                break
-            Thread.sleep(500)
+        val inputStream = socket.getInputStream()
+
+        var msgSize = 4
+        var msgArray = ByteArray(msgSize)
+        inputStream.read(msgArray)
+        msgSize = IntConvertUtils.getIntegerByByteArray(msgArray)
+        println("class :${this.javaClass.name} pid = ${Thread.currentThread().id}\tmsgSize is $msgSize")
+
+        val dataBytes = ByteArray(msgSize)
+        var i = 0
+        while (i<msgSize){
+            dataBytes[i] = inputStream.read().toByte()
+            i++
         }
-        return builder.toString()
+
+        val instruction = String(dataBytes)
+
+
+        println("class :${this.javaClass.name} pid = ${Thread.currentThread().id}\treadStringData :${instruction}")
+        return instruction
     }
+
 
     fun bindServerThread(thread:BaseServerThread){
         bindThread = thread

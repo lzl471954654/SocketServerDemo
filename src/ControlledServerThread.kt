@@ -33,6 +33,7 @@ class ControlledServerThread(override var socket: Socket) : BaseServerThread(soc
                     dispatchMessage(request)
                 }
                 ServerProtocol.FILE_READY->{
+                    println("FIle Ready!"+this.javaClass.name)
                     NewFileTransmission(params[1])
                 }
                 ServerProtocol.FILE_NOT_READY->{
@@ -55,8 +56,7 @@ class ControlledServerThread(override var socket: Socket) : BaseServerThread(soc
                 }
                 ServerProtocol.COMMAND_RESULT->{
                     if(isBind()){
-                        bindThread!!.printWriter.println(createParams(ServerProtocol.COMMAND_RESULT,params[1]))
-                        bindThread!!.printWriter.flush()
+                        bindThread!!.sendMsg(createParams(ServerProtocol.COMMAND_RESULT,params[1]))
                     }
                     else{
                         sendErrorMsg(ServerProtocol.UNBIND_ERROR)
@@ -64,8 +64,7 @@ class ControlledServerThread(override var socket: Socket) : BaseServerThread(soc
                 }
                 else->{
                     if(isBind()){
-                        bindThread!!.printWriter.println(request)
-                        bindThread!!.printWriter.flush()
+                        dispatchMessage(request)
                     }
                     else{
                         sendErrorMsg(ServerProtocol.UNBIND_ERROR)
@@ -78,16 +77,16 @@ class ControlledServerThread(override var socket: Socket) : BaseServerThread(soc
     fun sendPic(jsonSrc:String){
         val gson = Gson()
         val fileDesc = gson.fromJson(jsonSrc,FileDescribe::class.java)
-        bindThread!!.printWriter.println(createParams(ServerProtocol.PIC_SEND,jsonSrc))
+        bindThread!!.sendMsg(createParams(ServerProtocol.PIC_SEND,jsonSrc))
         val response = bindThread!!.readStringData()
         val params = response.split("_")
         when(params[0]){
             ServerProtocol.FILE_READY->{
-                this.printWriter.println(createParams(ServerProtocol.FILE_READY))
+                this.sendMsg(createParams(ServerProtocol.FILE_READY))
                 readAndSendByteData(this,bindThread!!,fileDesc.fileSize)
             }
             else->{
-                this.printWriter.println(createParams(ServerProtocol.ERROR,params[0]))
+                this.sendMsg(createParams(ServerProtocol.ERROR,params[0]))
             }
         }
     }
