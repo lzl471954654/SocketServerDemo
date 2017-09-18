@@ -13,6 +13,9 @@ class ControlledServerThread(override var socket: Socket) : BaseServerThread(soc
         while (loop&&!isInterrupted) {
             val request = readStringData()
             val params = request.split("_")
+            if(params.size<2){
+                return
+            }
             when (params[0]) {
                 ServerProtocol.ONLINE -> {
                     account.account = params[1]

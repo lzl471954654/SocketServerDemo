@@ -127,10 +127,14 @@ abstract class BaseServerThread:Thread {
 
         var msgSize = 4
         var msgArray = ByteArray(msgSize)
-        inputStream.read(msgArray)
+        var readSize = inputStream.read(msgArray)
         msgSize = IntConvertUtils.getIntegerByByteArray(msgArray)
         println("class :${this.javaClass.name} pid = ${Thread.currentThread().id}\tmsgSize is $msgSize")
-
+        println("readSize is $readSize")
+        if(msgSize<=0){
+            loop = false
+            return ""
+        }
         val dataBytes = ByteArray(msgSize)
         var i = 0
         while (i<msgSize){
