@@ -33,8 +33,8 @@ class ControlledServerThread(override var socket: Socket) : BaseServerThread(soc
                     return
                 }
                 ServerProtocol.FILE_LIST_FLAG->{
-                    dispatchMessage(request)
                     synchronized(lockObject){
+                        dispatchMessage(request)
                         println("${this.javaClass.name}\t pid:${Thread.currentThread().id} is lock")
                         lockObject.wait()
                         println("${this.javaClass.name}\t pid:${Thread.currentThread().id} is unlock")
@@ -42,9 +42,9 @@ class ControlledServerThread(override var socket: Socket) : BaseServerThread(soc
                 }
                 ServerProtocol.FILE_READY->{
                     println("FIle Ready!"+this.javaClass.name)
-                    NewFileTransmission(params[1])
                     synchronized(bindThread!!.lockObject){
-                        lockObject.notifyAll()
+                        NewFileTransmission(params[1])
+                        bindThread!!.lockObject.notifyAll()
                         println("${this.javaClass.name}\t pid:${Thread.currentThread().id} is called notify")
                     }
                 }
@@ -109,6 +109,7 @@ class ControlledServerThread(override var socket: Socket) : BaseServerThread(soc
             server()
         } catch (e: Exception) {
             LogUtils.logException(classTag, "" + e.message)
+            println("$classTag pid : ${Thread.currentThread().id}  ${e.message}")
         } finally {
             if(isBind()){
                 bindThread!!.loop = false

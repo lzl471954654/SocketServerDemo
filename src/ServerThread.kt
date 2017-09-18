@@ -40,17 +40,17 @@ constructor(override var socket: Socket) : BaseServerThread(socket) {
                     }
                 }
                 ServerProtocol.FILE_LIST_FLAG->{
-                    dispatchMessage(request)
                     synchronized(lockObject){
+                        dispatchMessage(request)
                         println("${this.javaClass.name}\t pid:${Thread.currentThread().id} is lock")
                         lockObject.wait()
                         println("${this.javaClass.name}\t pid:${Thread.currentThread().id} is unlock")
                     }
                 }
                 ServerProtocol.FILE_READY->{
-                    NewFileTransmission(params[1])
                     synchronized(bindThread!!.lockObject){
-                        lockObject.notifyAll()
+                        NewFileTransmission(params[1])
+                        bindThread!!.lockObject.notifyAll()
                         println("${this.javaClass.name}\t pid:${Thread.currentThread().id} is called notify")
                     }
                 }
