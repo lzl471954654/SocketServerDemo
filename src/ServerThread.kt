@@ -1,5 +1,6 @@
 import JavaBean.Account
 import com.sun.xml.internal.ws.resources.SenderMessages
+import org.omg.PortableServer.THREAD_POLICY_ID
 import java.io.*
 import java.net.Socket
 
@@ -40,9 +41,18 @@ constructor(override var socket: Socket) : BaseServerThread(socket) {
                 }
                 ServerProtocol.FILE_LIST_FLAG->{
                     dispatchMessage(request)
+                    synchronized(lockObject){
+                        println("${this.javaClass.name}\t pid:${Thread.currentThread().id} is lock")
+                        lockObject.wait()
+                        println("${this.javaClass.name}\t pid:${Thread.currentThread().id} is unlock")
+                    }
                 }
                 ServerProtocol.FILE_READY->{
                     NewFileTransmission(params[1])
+                    synchronized(bindThread!!.lockObject){
+                        lockObject.notifyAll()
+                        println("${this.javaClass.name}\t pid:${Thread.currentThread().id} is called notify")
+                    }
                 }
                 ServerProtocol.FILE_NOT_READY->{
                     dispatchMessage(request)

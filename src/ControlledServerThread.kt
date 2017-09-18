@@ -31,10 +31,19 @@ class ControlledServerThread(override var socket: Socket) : BaseServerThread(soc
                 }
                 ServerProtocol.FILE_LIST_FLAG->{
                     dispatchMessage(request)
+                    synchronized(lockObject){
+                        println("${this.javaClass.name}\t pid:${Thread.currentThread().id} is lock")
+                        lockObject.wait()
+                        println("${this.javaClass.name}\t pid:${Thread.currentThread().id} is unlock")
+                    }
                 }
                 ServerProtocol.FILE_READY->{
                     println("FIle Ready!"+this.javaClass.name)
                     NewFileTransmission(params[1])
+                    synchronized(bindThread!!.lockObject){
+                        lockObject.notifyAll()
+                        println("${this.javaClass.name}\t pid:${Thread.currentThread().id} is called notify")
+                    }
                 }
                 ServerProtocol.FILE_NOT_READY->{
                     dispatchMessage(request)

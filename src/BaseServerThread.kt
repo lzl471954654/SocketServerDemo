@@ -6,6 +6,7 @@ import java.io.*
 import java.net.Socket
 import java.nio.charset.Charset
 import kotlin.experimental.and
+import kotlin.reflect.jvm.internal.impl.load.kotlin.JvmType
 
 abstract class BaseServerThread:Thread {
     abstract var socket: Socket
@@ -16,6 +17,7 @@ abstract class BaseServerThread:Thread {
     var account = Account()
     var bindFlag = false
     var bindThread:BaseServerThread? = null
+    var lockObject:java.lang.Object = java.lang.Object()
 
     constructor(socket: Socket){
         this.socket = socket
