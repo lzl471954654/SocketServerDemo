@@ -86,8 +86,9 @@ constructor(override var socket: Socket) : BaseServerThread(socket) {
         var flag = false
         ServerMain.beControlledSocketMap.forEach {
             if (it.key==account) {
-                flag = true
-                bindServerThread(it.value)
+                flag = !it.value.isBind()
+                if (flag)
+                    bindServerThread(it.value)
                 return@forEach
             }
         }

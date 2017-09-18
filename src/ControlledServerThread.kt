@@ -7,7 +7,7 @@ import java.net.SocketException
 import java.net.SocketTimeoutException
 
 class ControlledServerThread(override var socket: Socket) : BaseServerThread(socket) {
-
+    var onlineFlag = false
 
     override fun server() {
         while (loop&&!isInterrupted) {
@@ -21,10 +21,12 @@ class ControlledServerThread(override var socket: Socket) : BaseServerThread(soc
                     account.account = params[1]
                     account.password = params[2]
                     if (containsAccount()) {
+                        onlineFlag = false
                         sendErrorMsg(ServerProtocol.ONLINE_FAILED)
                         return
                     } else
                     {
+                        onlineFlag = true
                         addAccount()
                         sendNormalMsg(ServerProtocol.ONLINE_SUCCESS)
                     }
@@ -122,14 +124,24 @@ class ControlledServerThread(override var socket: Socket) : BaseServerThread(soc
 
 
     override fun removeAccount() {
-        ServerMain.beControlledSocketMap.remove(account)
+        if (onlineFlag)
+            ServerMain.beControlledSocketMap.remove(account)
     }
 
     override fun addAccount() {
-        ServerMain.beControlledSocketMap.put(account, this)
+        if(onlineFlag)
+            ServerMain.beControlledSocketMap.put(account, this)
     }
 
     override fun containsAccount(): Boolean {
-        return ServerMain.beControlledSocketMap.contains(account)
+        var flag = false
+        ServerMain.beControlledSocketMap.forEach {
+            if(it.key == account)
+            {
+                flag = true
+                return@forEach
+            }
+        }
+        return flag
     }
 }
