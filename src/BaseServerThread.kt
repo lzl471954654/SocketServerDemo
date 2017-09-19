@@ -135,6 +135,10 @@ abstract class BaseServerThread:Thread {
             loop = false
             return ""
         }
+        if(msgSize>20*1024){
+            println("Warning there is a instruction is too large over 20KB , msgSIze is $msgSize")
+            return ""
+        }
         val dataBytes = ByteArray(msgSize)
         var i = 0
         while (i<msgSize){
