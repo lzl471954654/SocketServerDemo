@@ -1,10 +1,9 @@
 import JavaBean.Account;
-import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
+import Utils.LogUtils;
 
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Scanner;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ServerMain {
@@ -17,13 +16,13 @@ public class ServerMain {
             while(true){
                 Socket socket = serverSocket.accept();
                 ServerThread thread = new ServerThread(socket);
-                LogUtils.logInfo(getClass().getName(),"Get a Socket -> IP: "+socket.getInetAddress()+" Port: "+socket.getPort());
+                Utils.LogUtils.logInfo(getClass().getName(),"Get a Socket -> IP: "+socket.getInetAddress()+" Port: "+socket.getPort());
                 thread.start();
             }
         } catch (IOException e) {
             e.printStackTrace();
-            LogUtils.logException(this.getClass().getName(),"请检查端口是否被绑定\t"+e.getMessage());
-            LogUtils.releaseResource();
+            Utils.LogUtils.logException(this.getClass().getName(),"请检查端口是否被绑定\t"+e.getMessage());
+            Utils.LogUtils.releaseResource();
         }
     }*/
 

@@ -1,10 +1,7 @@
-import JavaBean.Account
 import JavaBean.FileDescribe
+import Utils.LogUtils
 import com.google.gson.Gson
-import java.io.*
 import java.net.Socket
-import java.net.SocketException
-import java.net.SocketTimeoutException
 
 class ControlledServerThread(override var socket: Socket) : BaseServerThread(socket) {
     var onlineFlag = false
