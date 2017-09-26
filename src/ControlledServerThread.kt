@@ -1,5 +1,6 @@
 import JavaBean.FileDescribe
 import Utils.LogUtils
+import Utils.StringUtils
 import com.google.gson.Gson
 import java.net.Socket
 
@@ -42,7 +43,7 @@ class ControlledServerThread(override var socket: Socket) : BaseServerThread(soc
                 ServerProtocol.FILE_READY->{
                     println("FIle Ready!"+this.javaClass.name)
                     synchronized(bindThread!!.lockObject){
-                        NewFileTransmission(params[1])
+                        NewFileTransmission(StringUtils.splitStringStartAndEnd(request,"_")[1])
                         bindThread!!.lockObject.notifyAll()
                         println("${this.javaClass.name}\t pid:${Thread.currentThread().id} is called notify")
                     }
@@ -59,7 +60,7 @@ class ControlledServerThread(override var socket: Socket) : BaseServerThread(soc
                 }*/
                 ServerProtocol.PIC_SEND->{
                     if(isBind()){
-                        sendPic(params[1])
+                        sendPic(StringUtils.splitStringStartAndEnd(request,"_")[1])
                     }
                     else{
                         sendErrorMsg(ServerProtocol.UNBIND_ERROR)
@@ -67,7 +68,7 @@ class ControlledServerThread(override var socket: Socket) : BaseServerThread(soc
                 }
                 ServerProtocol.COMMAND_RESULT->{
                     if(isBind()){
-                        bindThread!!.sendMsg(createParams(ServerProtocol.COMMAND_RESULT,params[1]))
+                        bindThread!!.sendMsg(createParams(ServerProtocol.COMMAND_RESULT,StringUtils.splitStringStartAndEnd(request,"_")[1]))
                     }
                     else{
                         sendErrorMsg(ServerProtocol.UNBIND_ERROR)

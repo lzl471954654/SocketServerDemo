@@ -162,6 +162,7 @@ abstract class BaseServerThread:Thread {
     }
 
     fun unBindServerThread(){
+        //bindThread!!.removeAccount()
         bindThread!!.bindThread = null
         bindThread!!.bindFlag = false
         bindThread = null

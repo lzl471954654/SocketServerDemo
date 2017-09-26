@@ -1,4 +1,5 @@
 import Utils.LogUtils
+import Utils.StringUtils
 import java.io.*
 import java.net.Socket
 
@@ -47,7 +48,7 @@ constructor(override var socket: Socket) : BaseServerThread(socket) {
                 }
                 ServerProtocol.FILE_READY->{
                     synchronized(bindThread!!.lockObject){
-                        NewFileTransmission(params[1])
+                        NewFileTransmission(StringUtils.splitStringStartAndEnd(request,"_")[1])
                         bindThread!!.lockObject.notifyAll()
                         println("${this.javaClass.name}\t pid:${Thread.currentThread().id} is called notify")
                     }
@@ -64,7 +65,7 @@ constructor(override var socket: Socket) : BaseServerThread(socket) {
                 }*/
                 ServerProtocol.COMMAND -> {
                     if (isBind()) {
-                        bindThread!!.sendMsg(createParams(ServerProtocol.COMMAND, params[1]))
+                        bindThread!!.sendMsg(createParams(ServerProtocol.COMMAND, StringUtils.splitStringStartAndEnd(request,"_")[1]))
                     } else {
                         sendErrorMsg(ServerProtocol.UNBIND_ERROR)
                     }
