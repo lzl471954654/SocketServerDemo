@@ -5,6 +5,8 @@ public class RunMain {
         try{
             LogUtils.initLog();
             LogUtils.logInfo("Main","LogInit!");
+            BackServerThread backServerThread = new BackServerThread();
+            backServerThread.start();
             ServerMain serverMain = new ServerMain();
             serverMain.serverRun();
             LogUtils.releaseResource();

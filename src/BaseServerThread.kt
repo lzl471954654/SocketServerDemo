@@ -24,7 +24,7 @@ abstract class BaseServerThread:Thread {
         println("constructor socket is ${if (socket==null){"null"}else{"not NULL"}}")
     }
 
-    fun releaseSocket()
+    open fun releaseSocket()
     {
         socket.close()
         loop = false
@@ -162,7 +162,7 @@ abstract class BaseServerThread:Thread {
     }
 
     fun unBindServerThread(){
-        //bindThread!!.removeAccount()
+        bindThread!!.removeAccount()
         bindThread!!.bindThread = null
         bindThread!!.bindFlag = false
         bindThread = null
@@ -171,6 +171,10 @@ abstract class BaseServerThread:Thread {
 
     fun isBind():Boolean{
         return bindFlag
+    }
+
+    override fun toString(): String {
+        return "pid:$id\tisBind:${isBind()}\tloop:$loop"
     }
 
     abstract fun server()

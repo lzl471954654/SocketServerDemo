@@ -22,6 +22,18 @@ constructor(override var socket: Socket) : BaseServerThread(socket) {
     }
 
 
+    override fun releaseSocket() {
+        loop = false
+        if(isBind())
+            unBindServerThread()
+        if(containsAccount())
+        {
+            removeAccount()
+            println("remove user ${account.account}")
+        }
+        socket.close()
+    }
+
     override fun server() {
         while (loop&&!isInterrupted) {
             println("when")
@@ -32,6 +44,7 @@ constructor(override var socket: Socket) : BaseServerThread(socket) {
                     account.account = params[1]
                     account.password = params[2]
                     if (checkContolledOnline()) {
+                        addAccount()
                         sendMsg(createParams(ServerProtocol.CONNECTED_SUCCESS))
                     } else {
                         sendMsg(createParams(ServerProtocol.CONNECTED_FAILED))

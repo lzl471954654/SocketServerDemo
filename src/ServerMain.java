@@ -9,7 +9,8 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ServerMain {
     public static ConcurrentHashMap<Account,ServerThread> controlSocketMap = new ConcurrentHashMap<>();
     public static ConcurrentHashMap<Account,ControlledServerThread> beControlledSocketMap = new ConcurrentHashMap<>();
-
+    /*public static ThreadGroup pcGroup = new ThreadGroup("pc");
+    public static ThreadGroup clientGroup = new ThreadGroup("client");*/
     /*public void serverRun() {
         try {
             ServerSocket serverSocket = new ServerSocket(10086);
