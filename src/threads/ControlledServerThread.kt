@@ -1,7 +1,11 @@
+package threads
+
 import JavaBean.FileDescribe
+import JavaBean.ServerProtocol
 import Utils.LogUtils
 import Utils.StringUtils
 import com.google.gson.Gson
+import mainClass.ServerMain
 import java.net.Socket
 
 class ControlledServerThread(override var socket: Socket) : BaseServerThread(socket) {
@@ -32,7 +36,7 @@ class ControlledServerThread(override var socket: Socket) : BaseServerThread(soc
                 ServerProtocol.OFFLINE -> {
                     return
                 }
-                ServerProtocol.FILE_LIST_FLAG->{
+                ServerProtocol.FILE_LIST_FLAG ->{
                     synchronized(lockObject){
                         dispatchMessage(request)
                         println("${this.javaClass.name}\t pid:${Thread.currentThread().id} is lock")
@@ -40,7 +44,7 @@ class ControlledServerThread(override var socket: Socket) : BaseServerThread(soc
                         println("${this.javaClass.name}\t pid:${Thread.currentThread().id} is unlock")
                     }
                 }
-                ServerProtocol.FILE_READY->{
+                ServerProtocol.FILE_READY ->{
                     println("FIle Ready!"+this.javaClass.name)
                     synchronized(bindThread!!.lockObject){
                         NewFileTransmission(StringUtils.splitStringStartAndEnd(request,"_")[1])
@@ -48,17 +52,17 @@ class ControlledServerThread(override var socket: Socket) : BaseServerThread(soc
                         println("${this.javaClass.name}\t pid:${Thread.currentThread().id} is called notify")
                     }
                 }
-                ServerProtocol.FILE_NOT_READY->{
+                ServerProtocol.FILE_NOT_READY ->{
                     dispatchMessage(request)
                 }
-                /*ServerProtocol.FILE_LIST_FLAG -> {
+                /*JavaBean.ServerProtocol.FILE_LIST_FLAG -> {
                     if (isBind())
                         fileTransmission(params[1])
                     else {
-                        sendErrorMsg(ServerProtocol.UNBIND_ERROR)
+                        sendErrorMsg(JavaBean.ServerProtocol.UNBIND_ERROR)
                     }
                 }*/
-                ServerProtocol.PIC_SEND->{
+                ServerProtocol.PIC_SEND ->{
                     if(isBind()){
                         sendPic(StringUtils.splitStringStartAndEnd(request,"_")[1])
                     }
@@ -66,7 +70,7 @@ class ControlledServerThread(override var socket: Socket) : BaseServerThread(soc
                         sendErrorMsg(ServerProtocol.UNBIND_ERROR)
                     }
                 }
-                ServerProtocol.COMMAND_RESULT->{
+                ServerProtocol.COMMAND_RESULT ->{
                     if(isBind()){
                         bindThread!!.sendMsg(createParams(ServerProtocol.COMMAND_RESULT,StringUtils.splitStringStartAndEnd(request,"_")[1]))
                     }
@@ -93,7 +97,7 @@ class ControlledServerThread(override var socket: Socket) : BaseServerThread(soc
         val response = bindThread!!.readStringData()
         val params = response.split("_")
         when(params[0]){
-            ServerProtocol.FILE_READY->{
+            ServerProtocol.FILE_READY ->{
                 this.sendMsg(createParams(ServerProtocol.FILE_READY))
                 readAndSendByteData(this,bindThread!!,fileDesc.fileSize)
             }

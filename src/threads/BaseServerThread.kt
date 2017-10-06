@@ -1,12 +1,12 @@
+package threads
+
 import JavaBean.Account
 import JavaBean.FileCommand
-import JavaBean.FileDescribe
+import JavaBean.ServerProtocol
+import Utils.IntConvertUtils
 import com.google.gson.Gson
-import java.io.*
 import java.net.Socket
 import java.nio.charset.Charset
-import kotlin.experimental.and
-import kotlin.reflect.jvm.internal.impl.load.kotlin.JvmType
 
 abstract class BaseServerThread:Thread {
     abstract var socket: Socket
@@ -16,7 +16,7 @@ abstract class BaseServerThread:Thread {
     val END = ServerProtocol.END_FLAG
     var account = Account()
     var bindFlag = false
-    var bindThread:BaseServerThread? = null
+    var bindThread: BaseServerThread? = null
     var lockObject:java.lang.Object = java.lang.Object()
 
     constructor(socket: Socket){
@@ -89,7 +89,7 @@ abstract class BaseServerThread:Thread {
         val response = bindThread!!.readStringData()
         val params = response.split("_")
         when (params[0]) {
-            ServerProtocol.FILE_READY->{
+            ServerProtocol.FILE_READY ->{
                 this.sendMsg(createParams(ServerProtocol.FILE_READY))
                 fileArray.describe.forEach {
                     readAndSendByteData(this,bindThread!!,it.fileSize)
@@ -101,7 +101,7 @@ abstract class BaseServerThread:Thread {
         }
     }
 
-    fun readAndSendByteData(srcServerThread: BaseServerThread,targetServerTHread:BaseServerThread,fileSize:Long){
+    fun readAndSendByteData(srcServerThread: BaseServerThread, targetServerTHread: BaseServerThread, fileSize:Long){
         var bufferedInput = srcServerThread.socket.getInputStream()
         var bufferedOutput = targetServerTHread.socket.getOutputStream()
         var bytes = ByteArray(4096)
@@ -154,7 +154,7 @@ abstract class BaseServerThread:Thread {
     }
 
 
-    fun bindServerThread(thread:BaseServerThread){
+    fun bindServerThread(thread: BaseServerThread){
         bindThread = thread
         bindFlag = true
         thread.bindThread = this

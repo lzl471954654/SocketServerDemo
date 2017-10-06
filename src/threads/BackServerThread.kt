@@ -1,3 +1,6 @@
+package threads
+
+import mainClass.ServerMain
 import java.util.*
 
 class BackServerThread:Thread() {

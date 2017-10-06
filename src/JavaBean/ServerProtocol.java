@@ -1,3 +1,5 @@
+package JavaBean;
+
 public interface ServerProtocol {
     /*
     * HEART_BEAT            心跳

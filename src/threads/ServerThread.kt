@@ -1,5 +1,9 @@
+package threads
+
+import JavaBean.ServerProtocol
 import Utils.LogUtils
 import Utils.StringUtils
+import mainClass.ServerMain
 import java.io.*
 import java.net.Socket
 
@@ -21,8 +25,22 @@ constructor(override var socket: Socket) : BaseServerThread(socket) {
         }
     }
 
-
     override fun releaseSocket() {
+        loop = false
+        if(isBind())
+        {
+            bindThread!!.removeAccount()
+            bindThread!!.loop = false
+            bindThread!!.interrupt()
+            unBindServerThread()
+        }
+        if(containsAccount())
+            removeAccount()
+        socket.close()
+    }
+
+
+    /*override fun releaseSocket() {
         loop = false
         if(isBind())
             unBindServerThread()
@@ -32,7 +50,7 @@ constructor(override var socket: Socket) : BaseServerThread(socket) {
             println("remove user ${account.account}")
         }
         socket.close()
-    }
+    }*/
 
     override fun server() {
         while (loop&&!isInterrupted) {
@@ -51,7 +69,7 @@ constructor(override var socket: Socket) : BaseServerThread(socket) {
                         return
                     }
                 }
-                ServerProtocol.FILE_LIST_FLAG->{
+                ServerProtocol.FILE_LIST_FLAG ->{
                     synchronized(lockObject){
                         dispatchMessage(request)
                         println("${this.javaClass.name}\t pid:${Thread.currentThread().id} is lock")
@@ -59,21 +77,21 @@ constructor(override var socket: Socket) : BaseServerThread(socket) {
                         println("${this.javaClass.name}\t pid:${Thread.currentThread().id} is unlock")
                     }
                 }
-                ServerProtocol.FILE_READY->{
+                ServerProtocol.FILE_READY ->{
                     synchronized(bindThread!!.lockObject){
                         NewFileTransmission(StringUtils.splitStringStartAndEnd(request,"_")[1])
                         bindThread!!.lockObject.notifyAll()
                         println("${this.javaClass.name}\t pid:${Thread.currentThread().id} is called notify")
                     }
                 }
-                ServerProtocol.FILE_NOT_READY->{
+                ServerProtocol.FILE_NOT_READY ->{
                     dispatchMessage(request)
                 }
-                /*ServerProtocol.FILE_LIST_FLAG -> {
+                /*JavaBean.ServerProtocol.FILE_LIST_FLAG -> {
                     if (isBind()) {
                         fileTransmission(params[1])
                     } else {
-                        sendErrorMsg(ServerProtocol.UNBIND_ERROR)
+                        sendErrorMsg(JavaBean.ServerProtocol.UNBIND_ERROR)
                     }
                 }*/
                 ServerProtocol.COMMAND -> {

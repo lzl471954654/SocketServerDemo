@@ -1,5 +1,10 @@
+package mainClass;
+
 import JavaBean.Account;
 import Utils.LogUtils;
+import threads.ControlledServerThread;
+import threads.PhoneServerThread;
+import threads.ServerThread;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -7,33 +12,34 @@ import java.net.Socket;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ServerMain {
-    public static ConcurrentHashMap<Account,ServerThread> controlSocketMap = new ConcurrentHashMap<>();
-    public static ConcurrentHashMap<Account,ControlledServerThread> beControlledSocketMap = new ConcurrentHashMap<>();
-    /*public static ThreadGroup pcGroup = new ThreadGroup("pc");
-    public static ThreadGroup clientGroup = new ThreadGroup("client");*/
-    /*public void serverRun() {
-        try {
-            ServerSocket serverSocket = new ServerSocket(10086);
-            while(true){
-                Socket socket = serverSocket.accept();
-                ServerThread thread = new ServerThread(socket);
-                Utils.LogUtils.logInfo(getClass().getName(),"Get a Socket -> IP: "+socket.getInetAddress()+" Port: "+socket.getPort());
-                thread.start();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-            Utils.LogUtils.logException(this.getClass().getName(),"请检查端口是否被绑定\t"+e.getMessage());
-            Utils.LogUtils.releaseResource();
-        }
-    }*/
+    public static ConcurrentHashMap<Account, ServerThread> controlSocketMap = new ConcurrentHashMap<>();
+    public static ConcurrentHashMap<Account, ControlledServerThread> beControlledSocketMap = new ConcurrentHashMap<>();
+    public static ConcurrentHashMap<Account, PhoneServerThread> phoneMap = new ConcurrentHashMap<>();
+
 
     public void serverRun(){
         try{
             run();
+            acceptPhone();
         }catch (Exception e){
             e.printStackTrace();
             LogUtils.logException(getClass().getName(),""+e.getMessage());
             LogUtils.releaseResource();
+        }
+    }
+
+    private void acceptPhone(){
+        ServerSocket serverSocket;
+        try {
+            serverSocket = new ServerSocket(10085);
+            while(true){
+                Socket socket = serverSocket.accept();
+                PhoneServerThread thread = new PhoneServerThread(socket);
+                thread.start();
+                System.out.println("Get a Phone Socket ip:"+socket.getInetAddress()+"\tport:"+socket.getPort());
+            }
+        }catch (IOException e){
+            e.printStackTrace();
         }
     }
 
@@ -72,7 +78,7 @@ public class ServerMain {
                     ServerSocket serverSocket = new ServerSocket(10086);
                     while(true){
                         Socket socket = serverSocket.accept();
-                        System.out.println("ServerThread socket is"+socket==null);
+                        System.out.println("threads.ServerThread socket is"+socket==null);
                         ServerThread thread = new ServerThread(socket);
                         LogUtils.logInfo(getClass().getName(),"Get a ControlledSocket -> IP: "+socket.getInetAddress()+" Port: "+socket.getPort());
                         thread.start();

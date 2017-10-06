@@ -1,3 +1,5 @@
+package Utils;
+
 public class IntConvertUtils {
     public static byte[] getIntegerBytes(int data){
         byte[] s = {(byte)0xff,(byte)0xff,(byte)0xff,(byte)0xff};
