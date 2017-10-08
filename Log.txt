@@ -1,4 +1,91 @@
-Mon Oct 09 05:34:08 CST 2017  Info: Main : LogInit!
-Mon Oct 09 05:34:09 CST 2017  Info: mainClass.ServerMain$1 : Get a ControlledSocket -> IP: /127.0.0.1 Port: 64707
-Mon Oct 09 05:34:11 CST 2017  Info: mainClass.ServerMain$2 : Get a ControlledSocket -> IP: /172.20.0.219 Port: 40344
-Mon Oct 09 05:36:40 CST 2017  Info: mainClass.ServerMain$1 : Get a ControlledSocket -> IP: /127.0.0.1 Port: 49178
+Mon Oct 09 05:39:48 CST 2017  Info: Main : LogInit!
+Mon Oct 09 05:43:43 CST 2017  Info: mainClass.ServerMain$2 : Get a ControlledSocket -> IP: /172.20.0.219 Port: 42539
+Mon Oct 09 05:43:46 CST 2017  Info: mainClass.ServerMain$2 : Get a ControlledSocket -> IP: /172.20.0.219 Port: 57459
+Mon Oct 09 05:44:10 CST 2017  Info: mainClass.ServerMain$1 : Get a ControlledSocket -> IP: /127.0.0.1 Port: 50837
+Mon Oct 09 05:44:16 CST 2017  Info: mainClass.ServerMain$2 : Get a ControlledSocket -> IP: /172.20.0.219 Port: 56000
+Mon Oct 09 05:45:10 CST 2017  Info: mainClass.ServerMain$1 : Get a ControlledSocket -> IP: /127.0.0.1 Port: 51186
+Mon Oct 09 05:45:30 CST 2017  Info: mainClass.ServerMain$2 : Get a ControlledSocket -> IP: /172.20.0.219 Port: 43986
+Mon Oct 09 05:45:34 CST 2017  Info: mainClass.ServerMain$1 : Get a ControlledSocket -> IP: /127.0.0.1 Port: 51244
+Mon Oct 09 05:46:18 CST 2017  Info: mainClass.ServerMain$2 : Get a ControlledSocket -> IP: /172.20.0.219 Port: 46669
+Mon Oct 09 05:50:50 CST 2017  Info: mainClass.ServerMain$2 : Get a ControlledSocket -> IP: /172.20.0.48 Port: 54679
+Mon Oct 09 05:50:53 CST 2017  Info: mainClass.ServerMain$2 : Get a ControlledSocket -> IP: /172.20.0.48 Port: 41851
+Mon Oct 09 05:51:38 CST 2017  Info: mainClass.ServerMain$2 : Get a ControlledSocket -> IP: /172.20.0.48 Port: 42372
+Mon Oct 09 05:51:43 CST 2017  Info: mainClass.ServerMain$2 : Get a ControlledSocket -> IP: /172.20.0.48 Port: 40970
+Mon Oct 09 05:53:42 CST 2017  Info: mainClass.ServerMain$2 : Get a ControlledSocket -> IP: /172.20.0.48 Port: 40294
+Mon Oct 09 05:53:56 CST 2017  Info: mainClass.ServerMain$2 : Get a ControlledSocket -> IP: /172.20.0.48 Port: 46231
+Mon Oct 09 05:53:58 CST 2017  Info: mainClass.ServerMain$2 : Get a ControlledSocket -> IP: /172.20.0.48 Port: 36065
+Mon Oct 09 05:53:59 CST 2017  Info: mainClass.ServerMain$2 : Get a ControlledSocket -> IP: /172.20.0.48 Port: 40776
+Mon Oct 09 05:53:59 CST 2017  Info: mainClass.ServerMain$2 : Get a ControlledSocket -> IP: /172.20.0.48 Port: 44754
+Mon Oct 09 05:53:59 CST 2017  Info: mainClass.ServerMain$2 : Get a ControlledSocket -> IP: /172.20.0.48 Port: 47601
+Mon Oct 09 05:54:00 CST 2017  Info: mainClass.ServerMain$2 : Get a ControlledSocket -> IP: /172.20.0.48 Port: 59963
+Mon Oct 09 05:54:16 CST 2017  Info: mainClass.ServerMain$2 : Get a ControlledSocket -> IP: /172.20.0.48 Port: 36897
+Mon Oct 09 05:54:17 CST 2017  Info: mainClass.ServerMain$2 : Get a ControlledSocket -> IP: /172.20.0.48 Port: 33913
+Mon Oct 09 05:54:17 CST 2017  Info: mainClass.ServerMain$2 : Get a ControlledSocket -> IP: /172.20.0.48 Port: 38686
+Mon Oct 09 05:54:18 CST 2017  Info: mainClass.ServerMain$2 : Get a ControlledSocket -> IP: /172.20.0.48 Port: 55777
+Mon Oct 09 05:54:18 CST 2017  Info: mainClass.ServerMain$2 : Get a ControlledSocket -> IP: /172.20.0.48 Port: 38175
+Mon Oct 09 05:54:18 CST 2017  Info: mainClass.ServerMain$2 : Get a ControlledSocket -> IP: /172.20.0.48 Port: 48749
+Mon Oct 09 05:54:18 CST 2017  Info: mainClass.ServerMain$2 : Get a ControlledSocket -> IP: /172.20.0.48 Port: 58819
+Mon Oct 09 05:54:33 CST 2017  Info: mainClass.ServerMain$2 : Get a ControlledSocket -> IP: /172.20.0.48 Port: 43709
+Mon Oct 09 05:54:49 CST 2017  Info: mainClass.ServerMain$1 : Get a ControlledSocket -> IP: /127.0.0.1 Port: 54044
+Mon Oct 09 05:54:51 CST 2017  Info: mainClass.ServerMain$2 : Get a ControlledSocket -> IP: /172.20.0.219 Port: 60605
+Mon Oct 09 05:56:14 CST 2017  Info: mainClass.ServerMain$1 : Get a ControlledSocket -> IP: /127.0.0.1 Port: 54513
+Mon Oct 09 05:58:11 CST 2017  Info: mainClass.ServerMain$2 : Get a ControlledSocket -> IP: /172.20.0.219 Port: 42883
+Mon Oct 09 05:58:19 CST 2017  Info: mainClass.ServerMain$1 : Get a ControlledSocket -> IP: /127.0.0.1 Port: 54767
+Mon Oct 09 05:59:21 CST 2017  Info: mainClass.ServerMain$2 : Get a ControlledSocket -> IP: /172.20.0.219 Port: 42920
+Mon Oct 09 06:00:54 CST 2017  Info: mainClass.ServerMain$1 : Get a ControlledSocket -> IP: /127.0.0.1 Port: 55371
+Mon Oct 09 06:01:15 CST 2017  Info: mainClass.ServerMain$2 : Get a ControlledSocket -> IP: /172.20.0.219 Port: 37463
+Mon Oct 09 06:02:25 CST 2017  Info: mainClass.ServerMain$1 : Get a ControlledSocket -> IP: /127.0.0.1 Port: 55830
+Mon Oct 09 06:02:55 CST 2017  Info: mainClass.ServerMain$2 : Get a ControlledSocket -> IP: /172.20.0.219 Port: 49651
+Mon Oct 09 06:05:19 CST 2017  Info: mainClass.ServerMain$1 : Get a ControlledSocket -> IP: /127.0.0.1 Port: 56763
+Mon Oct 09 06:05:39 CST 2017  Info: mainClass.ServerMain$2 : Get a ControlledSocket -> IP: /172.20.0.219 Port: 57263
+Mon Oct 09 06:08:39 CST 2017  Info: mainClass.ServerMain$1 : Get a ControlledSocket -> IP: /127.0.0.1 Port: 57995
+Mon Oct 09 06:09:44 CST 2017  Info: mainClass.ServerMain$2 : Get a ControlledSocket -> IP: /172.20.0.219 Port: 57714
+Mon Oct 09 06:11:03 CST 2017  Exception: threads.ControlledServerThread : Connection reset
+Mon Oct 09 06:11:03 CST 2017  Exception: threads.ControlledServerThread : Connection reset
+Mon Oct 09 06:11:26 CST 2017  Info: mainClass.ServerMain$1 : Get a ControlledSocket -> IP: /127.0.0.1 Port: 58949
+Mon Oct 09 06:11:29 CST 2017  Info: mainClass.ServerMain$2 : Get a ControlledSocket -> IP: /172.20.0.219 Port: 33587
+Mon Oct 09 06:13:42 CST 2017  Info: mainClass.ServerMain$1 : Get a ControlledSocket -> IP: /127.0.0.1 Port: 59716
+Mon Oct 09 06:13:56 CST 2017  Info: mainClass.ServerMain$2 : Get a ControlledSocket -> IP: /172.20.0.219 Port: 45227
+Mon Oct 09 06:15:13 CST 2017  Info: mainClass.ServerMain$2 : Get a ControlledSocket -> IP: /172.20.0.48 Port: 55991
+Mon Oct 09 06:15:20 CST 2017  Info: mainClass.ServerMain$1 : Get a ControlledSocket -> IP: /127.0.0.1 Port: 60273
+Mon Oct 09 06:15:20 CST 2017  Info: mainClass.ServerMain$2 : Get a ControlledSocket -> IP: /172.20.0.48 Port: 47387
+Mon Oct 09 06:15:21 CST 2017  Info: mainClass.ServerMain$2 : Get a ControlledSocket -> IP: /172.20.0.219 Port: 52639
+Mon Oct 09 06:15:22 CST 2017  Info: mainClass.ServerMain$1 : Get a ControlledSocket -> IP: /127.0.0.1 Port: 60289
+Mon Oct 09 06:15:23 CST 2017  Info: mainClass.ServerMain$2 : Get a ControlledSocket -> IP: /172.20.0.219 Port: 40934
+Mon Oct 09 06:15:24 CST 2017  Info: mainClass.ServerMain$2 : Get a ControlledSocket -> IP: /172.20.0.219 Port: 35464
+Mon Oct 09 06:15:25 CST 2017  Info: mainClass.ServerMain$1 : Get a ControlledSocket -> IP: /127.0.0.1 Port: 60305
+Mon Oct 09 06:15:26 CST 2017  Info: mainClass.ServerMain$2 : Get a ControlledSocket -> IP: /172.20.0.219 Port: 60892
+Mon Oct 09 06:15:28 CST 2017  Info: mainClass.ServerMain$1 : Get a ControlledSocket -> IP: /127.0.0.1 Port: 60323
+Mon Oct 09 06:15:29 CST 2017  Info: mainClass.ServerMain$2 : Get a ControlledSocket -> IP: /172.20.0.219 Port: 43707
+Mon Oct 09 06:15:49 CST 2017  Info: mainClass.ServerMain$2 : Get a ControlledSocket -> IP: /172.20.0.48 Port: 48539
+Mon Oct 09 06:16:17 CST 2017  Info: mainClass.ServerMain$2 : Get a ControlledSocket -> IP: /172.20.0.48 Port: 39460
+Mon Oct 09 06:19:22 CST 2017  Info: mainClass.ServerMain$1 : Get a ControlledSocket -> IP: /127.0.0.1 Port: 61630
+Mon Oct 09 06:19:45 CST 2017  Info: mainClass.ServerMain$2 : Get a ControlledSocket -> IP: /172.20.0.219 Port: 44583
+Mon Oct 09 06:26:29 CST 2017  Info: mainClass.ServerMain$2 : Get a ControlledSocket -> IP: /172.20.0.48 Port: 35905
+Mon Oct 09 06:26:37 CST 2017  Exception: threads.ControlledServerThread : Connection reset
+Mon Oct 09 06:26:37 CST 2017  Exception: threads.ControlledServerThread : Connection reset
+Mon Oct 09 06:26:37 CST 2017  Exception: threads.ControlledServerThread : Connection reset
+Mon Oct 09 06:26:37 CST 2017  Exception: threads.ControlledServerThread : Connection reset
+Mon Oct 09 06:26:37 CST 2017  Exception: threads.ControlledServerThread : Connection reset
+Mon Oct 09 06:26:37 CST 2017  Exception: threads.ControlledServerThread : Connection reset
+Mon Oct 09 06:26:37 CST 2017  Exception: threads.ControlledServerThread : Connection reset
+Mon Oct 09 06:26:40 CST 2017  Info: mainClass.ServerMain$1 : Get a ControlledSocket -> IP: /127.0.0.1 Port: 63250
+Mon Oct 09 06:26:50 CST 2017  Info: mainClass.ServerMain$2 : Get a ControlledSocket -> IP: /172.20.0.48 Port: 56616
+Mon Oct 09 06:28:05 CST 2017  Info: mainClass.ServerMain$1 : Get a ControlledSocket -> IP: /127.0.0.1 Port: 63275
+Mon Oct 09 06:28:06 CST 2017  Info: mainClass.ServerMain$2 : Get a ControlledSocket -> IP: /172.20.0.48 Port: 55770
+Mon Oct 09 06:36:46 CST 2017  Exception: threads.ControlledServerThread : Connection reset
+Mon Oct 09 06:36:46 CST 2017  Exception: threads.ControlledServerThread : Connection reset
+Mon Oct 09 06:38:04 CST 2017  Info: mainClass.ServerMain$1 : Get a ControlledSocket -> IP: /127.0.0.1 Port: 63441
+Mon Oct 09 06:38:17 CST 2017  Info: mainClass.ServerMain$2 : Get a ControlledSocket -> IP: /172.20.0.48 Port: 39776
+Mon Oct 09 06:40:44 CST 2017  Info: mainClass.ServerMain$1 : Get a ControlledSocket -> IP: /127.0.0.1 Port: 62537
+Mon Oct 09 06:42:00 CST 2017  Info: mainClass.ServerMain$2 : Get a ControlledSocket -> IP: /172.20.0.48 Port: 58121
+Mon Oct 09 06:43:46 CST 2017  Info: mainClass.ServerMain$2 : Get a ControlledSocket -> IP: /172.20.0.219 Port: 56664
+Mon Oct 09 06:43:47 CST 2017  Info: mainClass.ServerMain$2 : Get a ControlledSocket -> IP: /172.20.0.219 Port: 47582
+Mon Oct 09 06:43:50 CST 2017  Info: mainClass.ServerMain$2 : Get a ControlledSocket -> IP: /172.20.0.219 Port: 36614
+Mon Oct 09 06:43:57 CST 2017  Exception: threads.ControlledServerThread : Connection reset
+Mon Oct 09 06:43:57 CST 2017  Exception: threads.ControlledServerThread : Connection reset
+Mon Oct 09 06:44:01 CST 2017  Info: mainClass.ServerMain$1 : Get a ControlledSocket -> IP: /127.0.0.1 Port: 62601
+Mon Oct 09 06:44:05 CST 2017  Info: mainClass.ServerMain$2 : Get a ControlledSocket -> IP: /172.20.0.219 Port: 43770
+Mon Oct 09 06:49:26 CST 2017  Info: mainClass.ServerMain$1 : Get a ControlledSocket -> IP: /127.0.0.1 Port: 62694
+Mon Oct 09 06:49:27 CST 2017  Info: mainClass.ServerMain$2 : Get a ControlledSocket -> IP: /172.20.0.219 Port: 35719
+Mon Oct 09 06:56:36 CST 2017  Info: mainClass.ServerMain$1 : Get a ControlledSocket -> IP: /127.0.0.1 Port: 64307
