@@ -1,1 +1,4 @@
-Fri Oct 06 22:32:10 CST 2017  Info: Main : LogInit!
+Mon Oct 09 05:34:08 CST 2017  Info: Main : LogInit!
+Mon Oct 09 05:34:09 CST 2017  Info: mainClass.ServerMain$1 : Get a ControlledSocket -> IP: /127.0.0.1 Port: 64707
+Mon Oct 09 05:34:11 CST 2017  Info: mainClass.ServerMain$2 : Get a ControlledSocket -> IP: /172.20.0.219 Port: 40344
+Mon Oct 09 05:36:40 CST 2017  Info: mainClass.ServerMain$1 : Get a ControlledSocket -> IP: /127.0.0.1 Port: 49178

@@ -36,7 +36,7 @@ public class ServerMain {
                 Socket socket = serverSocket.accept();
                 PhoneServerThread thread = new PhoneServerThread(socket);
                 thread.start();
-                System.out.println("Get a Phone Socket ip:"+socket.getInetAddress()+"\tport:"+socket.getPort());
+                //System.out.println("Get a Phone Socket ip:"+socket.getInetAddress()+"\tport:"+socket.getPort());
             }
         }catch (IOException e){
             e.printStackTrace();

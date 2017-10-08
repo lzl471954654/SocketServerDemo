@@ -110,8 +110,8 @@ abstract class BaseServerThread:Thread {
         println("class :${this.javaClass.name} pid = ${Thread.currentThread().id}\tfileSize is :$fileSize")
         while (true){
             count = bufferedInput.read(bytes)
-            println("class :${this.javaClass.name} pid = ${Thread.currentThread().id}\tcount is " + count)
-            println("class :${this.javaClass.name} pid = ${Thread.currentThread().id}\tdata : ${String(bytes)}")
+            //println("class :${this.javaClass.name} pid = ${Thread.currentThread().id}\tcount is " + count)
+            //println("class :${this.javaClass.name} pid = ${Thread.currentThread().id}\tdata : ${String(bytes)}")
             if(count==-1)
                 break
             bufferedOutput.write(bytes,0,count)

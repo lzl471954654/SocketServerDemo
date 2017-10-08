@@ -101,6 +101,9 @@ constructor(override var socket: Socket) : BaseServerThread(socket) {
                         sendErrorMsg(ServerProtocol.UNBIND_ERROR)
                     }
                 }
+                ServerProtocol.OFFLINE->{
+                    return
+                }
                 else->{
                     dispatchMessage(request)
                 }

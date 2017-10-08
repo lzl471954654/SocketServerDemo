@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.util.Map;
 
 public class PhoneServerThread extends Thread {
     Socket socket;
@@ -65,7 +66,7 @@ public class PhoneServerThread extends Thread {
             else{
                 account.setAccount(params[1]);
                 account.setPassword(params[2]);
-                if(ServerMain.phoneMap.contains(account)){
+                if(containsAccount()){
                     loop = false;
                     sendMsg(createPramas(ServerProtocol.ONLINE_FAILED));
                 }
@@ -84,7 +85,7 @@ public class PhoneServerThread extends Thread {
             }else {
                 account.setAccount(params[1]);
                 account.setPassword(params[2]);
-                if(ServerMain.phoneMap.contains(account)){
+                if(containsAccount()){
                     loop = true;
                     bind(ServerMain.phoneMap.get(account));
                     sendMsg(createPramas(ServerProtocol.CONNECTED_SUCCESS));
@@ -98,30 +99,52 @@ public class PhoneServerThread extends Thread {
             loop = false;
             sendMsg(createPramas(ServerProtocol.ONLINE_FAILED));
         }
-        byte[] bytes = new byte[4096];
         int count = 0;
         while(loop){
+            System.out.println();
+            /*
+            * 这行 System.out.println 不能删掉！！！ 删掉不能正常运行！
+            * */
             if(isBind){
+                byte[] bytes = new byte[4096];
                 if(controlled){
                     count = bindThread.in.read(bytes);
                     if(count==-1){
                         loop = false;
                         break;
                     }
+                    //System.out.println("count is "+count);
                     out.write(bytes,0,count);
+                    //System.out.println("pid:"+getId()+"\tcontrolled :"+new String(bytes,0,count,"UTF-8"));
                 }else {
-                    count = in.read(bytes);
+                    count = bindThread.in.read(bytes);
                     if(count==-1){
                         loop = false;
                         break;
                     }
-                    bindThread.out.write(bytes,0,count);
+                    //System.out.println("count is "+count);
+                    out.write(bytes,0,count);
+                    //System.out.println("pid:"+getId()+"\tphone :"+new String(bytes,0,count,"UTF-8"));
                 }
             }
         }
+        loop = false;
+    }
+
+
+
+    private boolean containsAccount(){
+        for(Map.Entry<Account,PhoneServerThread> entry : ServerMain.phoneMap.entrySet()){
+            if(entry.getKey().equals(account))
+                return true;
+        }
+        return false;
     }
 
     private void bind(PhoneServerThread thread){
+        thread.bindThread = this;
+        thread.loop = true;
+        thread.isBind = true;
         bindThread = thread;
         isBind = true;
         loop = true;
@@ -189,7 +212,7 @@ public class PhoneServerThread extends Thread {
         }
 
         String is = new String(data,"UTF-8");
-        System.out.printf("phone instruction is : "+is);
+        System.out.printf("phone instruction is : "+is+"\n");
         if(is.endsWith(ServerProtocol.END_FLAG))
             return is;
         else
