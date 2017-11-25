@@ -20,8 +20,7 @@ public class Account implements Serializable{
 
         Account account1 = (Account) o;
 
-        if (!getAccount().equals(account1.getAccount())) return false;
-        return getPassword().equals(account1.getPassword());
+        return getAccount().equals(account1.getAccount()) && getPassword().equals(account1.getPassword());
     }
 
     @Override

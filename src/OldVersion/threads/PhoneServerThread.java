@@ -1,9 +1,9 @@
-package threads;
+package OldVersion.threads;
 
 import JavaBean.Account;
 import JavaBean.ServerProtocol;
 import Utils.IntConvertUtils;
-import mainClass.ServerMain;
+import OldVersion.mainClass.ServerMain;
 
 import java.io.IOException;
 import java.io.InputStream;

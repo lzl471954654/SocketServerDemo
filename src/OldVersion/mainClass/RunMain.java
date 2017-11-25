@@ -1,7 +1,7 @@
-package mainClass;
+package OldVersion.mainClass;
 
 import Utils.LogUtils;
-import threads.BackServerThread;
+import OldVersion.threads.BackServerThread;
 
 public class RunMain {
     public static void main(String[] args) {

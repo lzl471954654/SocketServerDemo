@@ -1,6 +1,6 @@
-package threads
+package OldVersion.threads
 
-import mainClass.ServerMain
+import OldVersion.mainClass.ServerMain
 import java.util.*
 
 class BackServerThread:Thread() {

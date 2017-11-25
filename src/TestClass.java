@@ -1,4 +1,5 @@
 import JavaBean.FileDescribe;
+import Utils.IntConvertUtils;
 import Utils.StringUtils;
 import com.google.gson.Gson;
 
@@ -7,11 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class TestClass {
     public static void main(String[] args) {
-        ConcurrentHashMap<String,Integer> map = new ConcurrentHashMap<>();
-        String s = "abc";
-        map.put(s,1);
-        Scanner scanner = new Scanner(System.in);
-        System.out.println(s.hashCode());
+        System.out.println(IntConvertUtils.getShortByByteArray(IntConvertUtils.getShortBytes((short)32000)));
     }
 
 }

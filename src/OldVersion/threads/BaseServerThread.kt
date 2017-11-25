@@ -1,4 +1,4 @@
-package threads
+package OldVersion.threads
 
 import JavaBean.Account
 import JavaBean.FileCommand
@@ -165,6 +165,7 @@ abstract class BaseServerThread:Thread {
         bindThread!!.removeAccount()
         bindThread!!.bindThread = null
         bindThread!!.bindFlag = false
+        bindThread!!.interrupt()
         bindThread = null
         bindFlag = false
     }

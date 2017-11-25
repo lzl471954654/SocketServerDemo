@@ -1,11 +1,11 @@
-package threads
+package OldVersion.threads
 
 import JavaBean.FileDescribe
 import JavaBean.ServerProtocol
 import Utils.LogUtils
 import Utils.StringUtils
 import com.google.gson.Gson
-import mainClass.ServerMain
+import OldVersion.mainClass.ServerMain
 import java.net.Socket
 
 class ControlledServerThread(override var socket: Socket) : BaseServerThread(socket) {

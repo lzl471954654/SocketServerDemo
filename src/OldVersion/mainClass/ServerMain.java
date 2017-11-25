@@ -1,10 +1,10 @@
-package mainClass;
+package OldVersion.mainClass;
 
 import JavaBean.Account;
 import Utils.LogUtils;
-import threads.ControlledServerThread;
-import threads.PhoneServerThread;
-import threads.ServerThread;
+import OldVersion.threads.ControlledServerThread;
+import OldVersion.threads.PhoneServerThread;
+import OldVersion.threads.ServerThread;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -78,7 +78,7 @@ public class ServerMain {
                     ServerSocket serverSocket = new ServerSocket(10086);
                     while(true){
                         Socket socket = serverSocket.accept();
-                        System.out.println("threads.ServerThread socket is"+socket==null);
+                        System.out.println("OldVersion.threads.ServerThread socket is"+socket==null);
                         ServerThread thread = new ServerThread(socket);
                         LogUtils.logInfo(getClass().getName(),"Get a ControlledSocket -> IP: "+socket.getInetAddress()+" Port: "+socket.getPort());
                         thread.start();

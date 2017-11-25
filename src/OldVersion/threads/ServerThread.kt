@@ -1,9 +1,9 @@
-package threads
+package OldVersion.threads
 
 import JavaBean.ServerProtocol
 import Utils.LogUtils
 import Utils.StringUtils
-import mainClass.ServerMain
+import OldVersion.mainClass.ServerMain
 import java.io.*
 import java.net.Socket
 
