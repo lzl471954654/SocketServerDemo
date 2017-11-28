@@ -62,8 +62,8 @@ class Pc2PhoneThread(val socket:Socket?) : Thread(){
                         ProtocolField.onlineSuccess
                     }
                 }else{
-                    if(Main.phoneMap.containsKey(account)){
-                        ProtocolField.onlineFailed
+                    if(Main.pcMap.containsKey(account)){
+                        ProtocolField.onlineSuccess
                     }else{
                         Main.phoneMap.put(account,this)
                         ProtocolField.onlineSuccess
