@@ -8,6 +8,7 @@ import Utils.IntConvertUtils
 import java.io.*
 import java.net.Socket
 import java.nio.charset.Charset
+import java.util.*
 import java.util.concurrent.locks.ReentrantLock
 
 class Pc2PhoneThread(val socket:Socket?) : Thread(){
@@ -16,10 +17,13 @@ class Pc2PhoneThread(val socket:Socket?) : Thread(){
     lateinit var account :Account
     lateinit var input:InputStream
     lateinit var output:OutputStream
-    lateinit var inPiped : PipedInputStream
-    lateinit var outPiped : PipedOutputStream
+
+    /*lateinit var inPiped : PipedInputStream
+    lateinit var outPiped : PipedOutputStream*/
 
     var isControlled : Boolean = false
+    var isBind : Boolean = false
+    var bindThread : Pc2PhoneThread? = null
 
     override fun run() {
         try{
@@ -30,8 +34,12 @@ class Pc2PhoneThread(val socket:Socket?) : Thread(){
             }
         }catch (e:IOException){
             e.printStackTrace()
+            println("${Date(System.currentTimeMillis())}-Thread $id : IOException , $account")
         }catch (e:InterruptedException){
             e.printStackTrace()
+            println("${Date(System.currentTimeMillis())}-Thread $id : InterruptedException , $account")
+        }finally {
+            socket?.close()
         }
     }
 
@@ -62,7 +70,18 @@ class Pc2PhoneThread(val socket:Socket?) : Thread(){
                         ProtocolField.onlineSuccess
                     }
                 }else{
+                    /**
+                     * phone to connect a pc , so search in pcMap
+                     * */
                     if(Main.pcMap.containsKey(account)){
+                        /**
+                         * connected successful , bind each other
+                         * */
+                        Main.phoneMap.put(account,this)
+                        bindThread = Main.pcMap[account]
+                        bindThread?.bindThread = this
+                        isBind = true
+                        bindThread?.isBind = true
                         ProtocolField.onlineSuccess
                     }else{
                         Main.phoneMap.put(account,this)
@@ -79,9 +98,40 @@ class Pc2PhoneThread(val socket:Socket?) : Thread(){
             /*
             *  online Success , to continue the connection
             * */
+
+            /*inPiped = PipedInputStream()
+            outPiped = PipedOutputStream()*/
+
+            if( flag == ProtocolField.pcOnline){
+                lock.lock()
+                try {
+                    waitCondition.await()
+                } finally {
+                    lock.unlock()
+                }
+            }else{
+                try {
+                    bindThread?.lock?.lock()
+                    bindThread?.waitCondition?.signalAll()
+                }finally {
+                    bindThread?.lock?.unlock()
+                }
+                /*inPiped.connect(bindThread!!.outPiped)
+                outPiped.connect(bindThread!!.inPiped)*/
+            }
+
+            var count:Int
+            var bytes = ByteArray(4096)
+            while (true){
+                count = bindThread!!.input.read(bytes)
+                if(count == -1)
+                    break
+                output.write(bytes,0,count)
+            }
+
         }else{
             /*
-            *  online Failed , shutdown the connection
+            *  online Failed , shutdown the connection , do nothing
             * */
         }
     }
