@@ -38,6 +38,21 @@ public class Main {
                 }
                 break;
             }
+            case "reset":{
+                System.out.println("please wait restart...");
+                listener.interrupt();
+                listener = null;
+                listener = new Thread(listner);
+                stopAllServer();
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                System.out.println("restart !");
+                listener.start();
+                break;
+            }
         }
     }
 
@@ -48,6 +63,8 @@ public class Main {
         for (Pc2PhoneThread thread : phoneMap.values()) {
             thread.interrupt();
         }
+        pcMap.clear();
+        phoneMap.clear();
     }
 
     private static Runnable listner = ()->{
