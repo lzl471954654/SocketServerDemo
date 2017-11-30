@@ -22,8 +22,10 @@ class Pc2PhoneThread(val socket:Socket?) : Thread(){
     lateinit var outPiped : PipedOutputStream*/
 
     var isControlled : Boolean = false
+    @Volatile
     var isBind : Boolean = false
     var bindThread : Pc2PhoneThread? = null
+
 
     override fun run() {
         try{
@@ -39,8 +41,34 @@ class Pc2PhoneThread(val socket:Socket?) : Thread(){
             e.printStackTrace()
             println("${Date(System.currentTimeMillis())}-Thread $id : InterruptedException , $account")
         }finally {
+            unbindThread()
+            input.close()
+            output.close()
             socket?.close()
         }
+    }
+
+
+    /**
+     *
+     * This function is aimed to unbind the thread that had already bind.
+     * Example:
+     * A is online
+     * B connected to A
+     * connected successful
+     * B bind A each other
+     * A <---> B
+     *
+     * if A thread or B thread Unexpected collapse and terminated , will call this method
+     * A <---> B  then  A <-  broke  -> B
+     *
+     * */
+    private fun unbindThread(){
+        isBind = false
+        bindThread?.isBind = false
+        bindThread?.interrupt()
+        bindThread?.bindThread = null
+        bindThread = null
     }
 
     /**
@@ -107,6 +135,9 @@ class Pc2PhoneThread(val socket:Socket?) : Thread(){
                     println("will be waited")
                     waitCondition.await()
                     println("waited end")
+                }catch (e:InterruptedException){
+                    e.printStackTrace()
+                    throw  e
                 } finally {
                     lock.unlock()
                 }
@@ -123,7 +154,7 @@ class Pc2PhoneThread(val socket:Socket?) : Thread(){
 
             var count:Int
             var bytes = ByteArray(4096)
-            while (true){
+            while (isBind && !Thread.interrupted()){
                 count = bindThread!!.input.read(bytes)
                 if(count == -1)
                     break
