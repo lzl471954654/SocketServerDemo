@@ -84,8 +84,7 @@ class Pc2PhoneThread(val socket:Socket?) : Thread(){
                         bindThread?.isBind = true
                         ProtocolField.onlineSuccess
                     }else{
-                        Main.phoneMap.put(account,this)
-                        ProtocolField.onlineSuccess
+                        ProtocolField.onlineFailed
                     }
                 }
             }
@@ -105,7 +104,9 @@ class Pc2PhoneThread(val socket:Socket?) : Thread(){
             if( flag == ProtocolField.pcOnline){
                 lock.lock()
                 try {
+                    println("will be waited")
                     waitCondition.await()
+                    println("waited end")
                 } finally {
                     lock.unlock()
                 }
