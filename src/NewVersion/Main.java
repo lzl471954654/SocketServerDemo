@@ -18,40 +18,38 @@ public class Main {
         Thread listener = new Thread(listner);
         listener.start();
         Scanner scanner = new Scanner(System.in);
-        String command = scanner.nextLine();
-        switch (command){
-            case "exit":{
-                listener.interrupt();
-                stopAllServer();
-                System.exit(0);
-                break;
-            }
-            case "pc":{
-                for (Pc2PhoneThread thread : pcMap.values()) {
-                    System.out.println("Thread "+thread.getId()+": isInterrupted - "+thread.isInterrupted());
+        while(true){
+            String command = scanner.nextLine();
+            switch (command){
+                case "exit":{
+                    listener.interrupt();
+                    stopAllServer();
+                    System.exit(0);
+                    break;
                 }
-                break;
-            }
-            case "phone":{
-                for (Pc2PhoneThread thread : phoneMap.values()) {
-                    System.out.println("Thread "+thread.getId()+": isInterrupted - "+thread.isInterrupted());
+                case "pc":{
+                    for (Pc2PhoneThread thread : pcMap.values()) {
+                        System.out.println("Thread "+thread.getId()+": isInterrupted - "+thread.isInterrupted());
+                    }
+                    break;
                 }
-                break;
-            }
-            case "reset":{
-                System.out.println("please wait restart...");
-                listener.interrupt();
-                listener = null;
-                listener = new Thread(listner);
-                stopAllServer();
-                try {
-                    Thread.sleep(2000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                case "phone":{
+                    for (Pc2PhoneThread thread : phoneMap.values()) {
+                        System.out.println("Thread "+thread.getId()+": isInterrupted - "+thread.isInterrupted());
+                    }
+                    break;
                 }
-                System.out.println("restart !");
-                listener.start();
-                break;
+                case "reset":{
+                    System.out.println("please wait restart...");
+                    stopAllServer();
+                    try {
+                        Thread.sleep(2000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    System.out.println("restart !");
+                    break;
+                }
             }
         }
     }

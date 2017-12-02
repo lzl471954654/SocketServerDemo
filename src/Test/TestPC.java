@@ -27,7 +27,12 @@ public class TestPC {
         }
         while (true){
             flag = (byte) inputStream.read();
+            if(flag == -1)
+                break;
             System.out.println("message is "+flag);
         }
+        //inputStream.close();
+        //outputStream.close();
+        socket.close();
     }
 }

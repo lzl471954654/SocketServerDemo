@@ -7,6 +7,7 @@ import NewVersion.ProtocolField
 import Utils.IntConvertUtils
 import java.io.*
 import java.net.Socket
+import java.net.SocketException
 import java.nio.charset.Charset
 import java.util.*
 import java.util.concurrent.locks.ReentrantLock
@@ -35,15 +36,19 @@ class Pc2PhoneThread(val socket:Socket?) : Thread(){
                 service()
             }
         }catch (e:IOException){
-            e.printStackTrace()
+            //e.printStackTrace()
             println("${Date(System.currentTimeMillis())}-Thread $id : IOException , $account")
         }catch (e:InterruptedException){
-            e.printStackTrace()
+            //e.printStackTrace()
             println("${Date(System.currentTimeMillis())}-Thread $id : InterruptedException , $account")
-        }finally {
+        }catch (e:SocketException){
+            println("${Date(System.currentTimeMillis())}-Thread $id : SocketException : ${e.message} , $account")
+        }
+        finally {
+            println("unbind")
             unbindThread()
-            input.close()
-            output.close()
+            //input.close()
+            //output.close()
             socket?.close()
         }
     }
@@ -69,6 +74,13 @@ class Pc2PhoneThread(val socket:Socket?) : Thread(){
         bindThread?.interrupt()
         bindThread?.bindThread = null
         bindThread = null
+        var removeFlag = false
+        if(isControlled){
+            removeFlag = Main.pcMap.remove(account,this)
+        }else{
+            removeFlag = Main.phoneMap.remove(account,this)
+        }
+        println("Remove thread "+removeFlag+" , Thread is ${id} , account = $account")
     }
 
     /**
@@ -136,9 +148,10 @@ class Pc2PhoneThread(val socket:Socket?) : Thread(){
                     waitCondition.await()
                     println("waited end")
                 }catch (e:InterruptedException){
-                    e.printStackTrace()
+                    //e.printStackTrace()
                     throw  e
                 } finally {
+                    println("unlock")
                     lock.unlock()
                 }
             }else{

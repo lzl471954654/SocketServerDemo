@@ -24,6 +24,7 @@ public class TestPhone {
             System.out.println("Online success");
         }else{
             System.out.println("online Failed");
+            return;
         }
         int i = 0;
         while(true){
