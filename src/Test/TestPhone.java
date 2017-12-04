@@ -10,7 +10,7 @@ import java.net.Socket;
 
 public class TestPhone {
     public static void main(String[] args) throws IOException, InterruptedException {
-        Socket socket = new Socket("127.0.0.1",10086);
+        Socket socket = new Socket("118.89.236.219",10086);
         OutputStream outputStream = socket.getOutputStream();
         InputStream inputStream = socket.getInputStream();
         String s = "lzl|lzl";
