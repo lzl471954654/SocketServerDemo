@@ -26,6 +26,7 @@ public class TestPC {
             System.out.println("online Failed");
         }
         while (true){
+            outputStream.write(flag);
             flag = (byte) inputStream.read();
             if(flag == -1)
                 break;
