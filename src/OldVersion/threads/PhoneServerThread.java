@@ -41,13 +41,14 @@ public class PhoneServerThread extends Thread {
         }
         finally {
             System.out.println("disConnect");
-            unBind();
             try {
                 if(socket!=null){
                     socket.close();
                 }
             } catch (IOException e) {
                 e.printStackTrace();
+            }finally {
+                unBind();
             }
         }
     }
@@ -153,11 +154,11 @@ public class PhoneServerThread extends Thread {
     private void unBind(){
         if(bindThread!=null){
             removeAccount();
+            bindThread.interrupt();
             bindThread.removeAccount();
             bindThread.isBind = false;
             bindThread.bindThread = null;
             bindThread.loop = false;
-            bindThread.interrupt();
         }
     }
 

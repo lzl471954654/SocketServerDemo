@@ -24,6 +24,12 @@ class BackServerThread:Thread() {
                         println(it.key.account+"\t\t"+it.value.toString())
                     }
                 }
+                "phone" ->{
+                    println("\n phone List")
+                    ServerMain.phoneMap.forEach{
+                        println(it.key.account+"\t\t"+it.value.toString())
+                    }
+                }
                 "exit"->{
                     System.exit(0)
                 }
