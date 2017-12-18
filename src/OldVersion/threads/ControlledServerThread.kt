@@ -127,7 +127,7 @@ class ControlledServerThread(override var socket: Socket) : BaseServerThread(soc
 
     override fun removeAccount() {
         if (onlineFlag)
-            ServerMain.beControlledSocketMap.remove(account)
+            ServerMain.beControlledSocketMap.remove(account,this)
     }
 
     override fun addAccount() {

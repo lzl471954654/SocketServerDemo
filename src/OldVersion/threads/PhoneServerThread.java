@@ -17,10 +17,10 @@ public class PhoneServerThread extends Thread {
     OutputStream out;
     Account account = new Account();
 
-    PhoneServerThread bindThread;
-    boolean controlled = false;
-    boolean loop = false;
-    boolean isBind = false;
+    volatile PhoneServerThread bindThread;
+    volatile boolean controlled = false;
+    volatile boolean loop = false;
+    volatile boolean isBind = false;
 
 
     public PhoneServerThread(Socket socket){
@@ -101,7 +101,7 @@ public class PhoneServerThread extends Thread {
         }
         int count = 0;
         while(loop){
-            System.out.println();
+            //System.out.println();
             /*
             * 这行 System.out.println 不能删掉！！！ 删掉不能正常运行！
             * */
@@ -162,7 +162,7 @@ public class PhoneServerThread extends Thread {
     }
 
     private void removeAccount(){
-        ServerMain.phoneMap.remove(account);
+        ServerMain.phoneMap.remove(account,this);
     }
 
     private void addAccount(){

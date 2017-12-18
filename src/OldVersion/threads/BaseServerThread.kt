@@ -11,11 +11,14 @@ import java.nio.charset.Charset
 abstract class BaseServerThread:Thread {
     abstract var socket: Socket
 
+    @Volatile
     internal var loop = true
     val classTag = javaClass.name
     val END = ServerProtocol.END_FLAG
     var account = Account()
+    @Volatile
     var bindFlag = false
+    @Volatile
     var bindThread: BaseServerThread? = null
     var lockObject:java.lang.Object = java.lang.Object()
 

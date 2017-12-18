@@ -129,7 +129,8 @@ constructor(override var socket: Socket) : BaseServerThread(socket) {
     }
 
     override fun removeAccount() {
-        ServerMain.controlSocketMap.remove(account)
+        //ServerMain.controlSocketMap.remove(account)
+        ServerMain.controlSocketMap.remove(account,this)
     }
 
     override fun addAccount() {
